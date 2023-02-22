@@ -135,42 +135,42 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
   - Top Level 
     - Module file name: top_level
     - Functioanlity Description: The top level module of our machine is responsible for creating connections between different submodules by designing and implementing necessary datapaths and control signals, serving as a primary interface between the submodules and the external environment. It coordinates the activities of different submodules to ensure that the machine functions as intended.
-    - Schematic: ![test](/images/top-level.png)
+    - Schematic: ![test](images/top-level.png)
   - Program Counter
     - Module file name: PC
     - Module testbench file name: pc_test
     - Functioanlity Description: The program counter module keeps track of the memory address where the next instruction of the program is stored, allowing the CPU to execute instructions in the right order. It also handles branch instructions, which can make the PC jump to a different part of the program.
     - (Optional) Testbench Description: TODO. Describe your testbench. How does it work? What test cases does it test?
-    - Schematic: ![test](/images/PC.PNG)
+    - Schematic: ![test](images/PC.PNG)
     - (Optional) Timing Diagram: TODO. Show us a screenshot of the timing diagram that demonstrates all relevant functions of  the fetch unit.
   - Instruction Memory
     - Module file name: instr_ROM
     - Functioanlity Description: The instruction memory module stores the program instructions in memory and provides them to the CPU as needed. When the CPU needs to execute an instruction, it requests it from the instruction memory module by specifying the address of the instruction in memory. The instruction memory module then reads the contents of that memory address and sends it to the CPU for execution.
-    - Schematic: ![test](/images/instr_ROM.PNG)
+    - Schematic: ![test](images/instr_ROM.PNG)
   - Control Decoder
     - Module file name: control
     - Functioanlity Description: The control decoder module receives the binary instruction code from the instruction register and decodes it into a set of control signals that direct the operation of the CPU's other functional units, such as the arithmetic logic unit (ALU), registers, and memory.
-    - Schematic: ![test](/images/control.PNG)
+    - Schematic: ![test](images/control.PNG)
   - Register File
     - Module file name: reg_file
     - Functioanlity Description: The register file module consists of 16 8-bit registers that can hold binary data temporarily during program execution. During program execution, data is loaded into the register file from memory or other sources, such as input/output devices. The CPU can then access the data in the register file very quickly without having to use slower memory storage.
-    - Schematic: ![test](/images/reg.PNG)
+    - Schematic: ![test](images/reg.PNG)
   - ALU (Arithmetic Logic Unit)
     - Module file name: alu
     - Module testbench file name: alu_Tb
     - Functioanlity Description: The ALU module performs arithmetic and logical operations on data that is stored in registers or memory. It receives instructions from the CPU control unit and operates on the data according to those instructions.
     - (Optional) Testbench Description: TODO. Describe your testbench. How does it work? What test cases does it test?
     - ALU Operations: We will be demonstrating "left shift and save"(lss), "right shift and save"(rss), "Bitwise XOR and save"(xors), "Add and save"(adds), and "Bitwise AND and save"(ands).
-    - Schematic: ![test](/images/alu.PNG)
+    - Schematic: ![test](images/alu.PNG)
     - (Optional) Timing Diagram: TODO. Show us a screenshot of the timing diagram that demonstrates all relevant functions of  the fetch unit.
   - Data Memory
     - Module file name: dat_mem
     - Functioanlity Description: The data memory module is designed to hold data temporarily or permanently so that it can be accessed by the processor when needed. When the processor needs to read or write data, it sends the address of the memory cell to the data memory module, which then retrieves or stores the data at that location. 
-    - Schematic: ![test](/images/data_mem.PNG)
+    - Schematic: ![test](images/data_mem.PNG)
   - Muxes (Multiplexers)
     - Module file name: mux
     - Functioanlity Description: The muxes module selects one input signal from four input signals based on the value of the control signal. The selected input signal is then passed through to the output of the module.
-    - Schematic: ![test](/images/mux.PNG)
+    - Schematic: ![test](images/mux.PNG)
 
 ## Program Implementations
 ### Program 1

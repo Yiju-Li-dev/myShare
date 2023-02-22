@@ -13,6 +13,7 @@
   - [Architectural Overview](#architectural-overview)
   - [Machine Specification](#machine-specification)
   - [Programmer’s Model](#programmers-model)
+  - [ALU Implementation](#alu-implementation)
   - [Individual Component Specification](#individual-component-specification)
   - [Program Implementations](#program-implementations)
     - [Program 1](#program-1)
@@ -130,6 +131,9 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
 - The way of operation
     - Due to the limitations on the registers, our machine uses the "load-operations-save-load" model, meaning that we would recommend the programmer seperate the loading behaviours into different steps, instead of loading all the data at once. In other words, our machine requires the knowledge of how the data is structures before the operations.
   - One could compile the code from ARM/MIPS to Wallfacer(our machine) and vice versa. However, it won't work at all if one just simply copy the code. This is because that we implement with similar logic to ARM/MIPS but with different design, such that there's at most one operand for each instruction.
+
+## ALU Implementation
+- Our ALU only supports logical instructions, such as left shift, right shift, XOR, ADD, and AND, and will not be used for non-arithmetic instructions.
 
 ## Individual Component Specification
   - Top Level 

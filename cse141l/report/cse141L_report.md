@@ -952,6 +952,7 @@ def program3():
   - Milestone 2
     - Architecture Overview
       - Included labels for wires
+      - Updated to a more clear and precise diagram
   - Milestone 1
     - Initial version
 

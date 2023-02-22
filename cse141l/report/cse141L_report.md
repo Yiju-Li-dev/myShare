@@ -55,7 +55,7 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
   - The goals of our machine is solely to help our group to achieve A+ for this course.
 
 ## Architectural Overview
-![test](arch.jpg)
+![test](images/arch.jpg)
 
 [//]: <> (To edit the picture above, simply download draw.io integration in VS code)
 

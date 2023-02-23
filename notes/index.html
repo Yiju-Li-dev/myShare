@@ -14,6 +14,7 @@ title: Home
   {% endif %}
 {% endfor %}
 
-{% for page in notes %}
+{% for page in site.pages %}
+
   <p>{{ page.url }}</p>
 {% endfor %}

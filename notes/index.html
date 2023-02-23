@@ -4,47 +4,38 @@ title: Home
 ---
 
 <h1>Things to Do</h1>
-
 <p><a href="https://myshare.ink/notes/things_todo.html">View things to do</a></p>
 
 <h1>Daily Notes</h1>
-
-{% assign notes = site.pages | where: "dir", "/daily_notes" | sort: "path" | reverse %}
-
-{% assign months = "" %}
-
-{% for note in notes %}
-  {% assign date = note.name | slice: 0, 10 %}
-  {% assign month = date | date: "%B %Y" %}
-  {% unless months contains month %}
-    {% assign months = months | prepend: month %}
-    <h2>{{ month }}</h2>
-    <ul>
-    {% for n in notes %}
-      {% assign d = n.name | slice: 0, 10 %}
-      {% if d == date %}
-        <li><a href="https://myshare.ink/notes/{{ n.url }}">{{ d | date: "%B %d, %Y" }}</a></li>
-      {% endif %}
-    {% endfor %}
-    </ul>
-  {% endunless %}
-{% endfor %}
+{% assign monthly_notes = site.pages | where: "dir", "/notes/daily_notes" | group_by_exp: "page", "page.date | date: '%B %Y'" %}
+<ul>
+  {% for month in monthly_notes %}
+    <li>{{ month.name }}
+      <ul>
+        {% assign notes = month.items | sort: "date" | reverse %}
+        {% for note in notes %}
+          <li><a href="https://myshare.ink/notes{{ note.url }}">{{ note.date | date: "%B %d, %Y" }}</a></li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>
 
 <h1>View Notes by Month and Year</h1>
 
-<select id="month-year">
-  {% assign months = notes | map: "name" | map: "slice", 0, 7 | uniq %}
-  {% for month in months %}
-    {% assign year = month | slice: 0, 4 %}
-    <option value="{{ month }}">{{ month }} ({{ year }})</option>
+<select id="select-date">
+  {% assign notes = site.pages | where: "dir", "/notes/daily_notes" %}
+  {% assign dates = notes | map: "name" | map: "slice", 0, 7 | uniq %}
+  {% for date in dates %}
+    <option value="https://myshare.ink/notes/daily_notes/{{ date }}.html">{{ date }}</option>
   {% endfor %}
 </select>
 
 <button id="view-notes">View Notes</button>
 
 <script>
-document.getElementById("view-notes").addEventListener("click", function() {
-  var selected = document.getElementById("month-year").value;
-  window.location.href = "https://myshare.ink/notes/daily_notes/" + selected + ".html";
-});
+  document.getElementById("view-notes").addEventListener("click", function() {
+    var selected = document.getElementById("select-date").value;
+    window.location.href = selected;
+  });
 </script>

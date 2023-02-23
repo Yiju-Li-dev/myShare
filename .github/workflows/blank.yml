@@ -17,7 +17,7 @@ jobs:
         with:
           source_file: '/'
           destination_repo: 'Yiju-Li-dev/myShare'
-          destination_folder: 'notes/
+          destination_folder: 'notes/'
           user_email: 'YijuLi.dev@gmail.com'
           user_name: 'Yiju-Li-dev'
           commit_message: 'Add source files'

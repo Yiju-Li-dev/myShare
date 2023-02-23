@@ -7,22 +7,9 @@ title: Home
 <p><a href="{{ site.baseurl }}/notes/things_todo.html">View things to do</a></p>
 
 {% assign notes = site.pages |  sort: "url" %}
-{% assign months = "" | split: "" %}
 
 {% for note in notes %}
-  {% capture note_month %}{{ note.url | split: "/" | last | split: "_" | first }}{% endcapture %}
-  {% if months contains note_month %}
-    {% assign note_index = forloop.index0 | minus: 1 %}
-  {% else %}
-    {% assign note_index = months | push: note_month | size | minus: 1 %}
-  {% endif %}
-  {% if note.title %}
-    {% assign note_title = note.title %}
-  {% else %}
-    {% assign note_title = note.url | remove: "/notes/daily_notes/" | replace: "_", " " | capitalize %}
-  {% endif %}
-  {% if note_index == forloop.index0 %}
-    {% if forloop.first %}<h2>{{ note_month }}</h2>{% endif %}
-    <p><a href="{{ note.url }}">{{ note.url }}</a></p>
+  {% if note.url contains "/notes/daily_notes/" %}
+    <p><a href="{{ note.url }}">{{ note.url | slice: -10, 10 }}</a></p>
   {% endif %}
 {% endfor %}

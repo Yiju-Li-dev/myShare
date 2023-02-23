@@ -8,7 +8,7 @@ title: Home
 
 {% assign notes = site.pages}
 
-{% for note in notes %}
+{% for note in site.pages %}
   {% if note.url contains "/notes/daily_notes/" %}
     <p><a href="{{ note.url }}">{{ note.title | default: note.url }}</a></p>
   {% endif %}

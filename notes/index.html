@@ -10,6 +10,6 @@ title: Home
 
 {% for note in notes %}
   {% if note.url contains "/notes/daily_notes/" %}
-    <p><a href="{{ note.url }}">{{ note.url | slice: -16, 10 }}</a></p>
+    <p><a href="{{ note.url }}">{{ note.url | slice: -15, 10 }}</a></p>
   {% endif %}
 {% endfor %}

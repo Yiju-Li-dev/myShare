@@ -6,21 +6,8 @@ title: Home
 <h1>Things to Do</h1>
 <p><a href="{{ site.baseurl }}/notes/things_todo.html">View things to do</a></p>
 
-<h1>Daily Notes</h1>
-{% assign monthly_notes = site.pages | where: "dir", "/notes/daily_notes" | group_by_exp: "page", "page.date | date: '%B %Y'" %}
-<ul>
-  {% for month in monthly_notes %}
-    <li>{{ month.name }}
-      <ul>
-        {% assign notes = month.items | sort: "date" | reverse %}
-        {% for note in notes %}
-          <li><a href="{{ site.baseurl }}{{ note.url }}">{{ note.date | date: "%B %d, %Y" }}</a></li>
-        {% endfor %}
-      </ul>
-    </li>
-  {% endfor %}
-</ul>
+{% assign notes = site.pages | where: "dir", "/notes/daily_notes" %}
 
-{% for page in site.pages %}
-  <h3>{{  page.url}}</h1>
+{% for note in notes %}
+  <p><a href="{{ note.url }}">{{ note.title | default: note.url }}</a></p>
 {% endfor %}

@@ -1,0 +1,23 @@
+name: Push Files
+
+on:
+  push
+
+jobs:
+  copy-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Copy source files
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source_file: '/'
+          destination_repo: 'Yiju-Li-dev/myShare'
+          destination_folder: 'notes/
+          user_email: 'YijuLi.dev@gmail.com'
+          user_name: 'Yiju-Li-dev'
+          commit_message: 'Add source files'

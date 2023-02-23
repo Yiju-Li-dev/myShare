@@ -23,6 +23,6 @@ title: Home
   {% endif %}
   {% if note_index == forloop.index0 %}
     {% if forloop.first %}<h2>{{ note_month }}</h2>{% endif %}
-    <p><a href="{{ note.url }}">{{ note_title }}</a></p>
+    <p><a href="{{ note.url }}">{{ note.url }}</a></p>
   {% endif %}
 {% endfor %}

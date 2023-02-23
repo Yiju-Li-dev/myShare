@@ -13,8 +13,3 @@ title: Home
     <p><a href="{{ note.url }}">{{ note.title | default: note.url }}</a></p>
   {% endif %}
 {% endfor %}
-
-{% for page in notes %}
-
-  <p>{{ page.url }}</p>
-{% endfor %}

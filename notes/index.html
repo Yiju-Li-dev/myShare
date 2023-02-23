@@ -14,9 +14,14 @@ title: Home
       <ul>
         {% assign notes = month.items | sort: "date" | reverse %}
         {% for note in notes %}
-          <li><a href="{{ site.baseurl }}{{ note.url | remove_first: 'notes/' }}">{{ note.date | date: "%B %d, %Y" }}</a></li>
+          <li><a href="{{ site.baseurl }}{{ note.url }}">{{ note.date | date: "%B %d, %Y" }}</a></li>
         {% endfor %}
       </ul>
     </li>
   {% endfor %}
 </ul>
+
+{% for page in site.pages %}
+  <h1>{{ page.title }}</h1>
+  <p>{{ page.content }}</p>
+{% endfor %}

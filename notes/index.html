@@ -20,22 +20,3 @@ title: Home
     </li>
   {% endfor %}
 </ul>
-
-<h1>View Notes by Month and Year</h1>
-
-<select id="select-date">
-  {% assign notes = site.pages | where: "dir", "/notes/daily_notes" %}
-  {% assign dates = notes | map: "name" | map: "slice", 0, 7 | uniq %}
-  {% for date in dates %}
-    <option value="{{ site.baseurl }}/notes/{{ date }}.html">{{ date }}</option>
-  {% endfor %}
-</select>
-
-<button id="view-notes">View Notes</button>
-
-<script>
-  document.getElementById("view-notes").addEventListener("click", function() {
-    var selected = document.getElementById("select-date").value;
-    window.location.href = selected;
-  });
-</script>

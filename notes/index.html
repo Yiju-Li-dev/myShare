@@ -4,7 +4,7 @@ title: Home
 ---
 
 <h1>Things to Do</h1>
-<p><a href="https://myshare.ink/notes/things_todo.html">View things to do</a></p>
+<p><a href="{{ site.baseurl }}/notes/things_todo.html">View things to do</a></p>
 
 <h1>Daily Notes</h1>
 {% assign monthly_notes = site.pages | where: "dir", "/notes/daily_notes" | group_by_exp: "page", "page.date | date: '%B %Y'" %}
@@ -14,7 +14,7 @@ title: Home
       <ul>
         {% assign notes = month.items | sort: "date" | reverse %}
         {% for note in notes %}
-          <li><a href="https://myshare.ink/notes{{ note.url }}">{{ note.date | date: "%B %d, %Y" }}</a></li>
+          <li><a href="{{ site.baseurl }}{{ note.url | remove_first: 'notes/' }}">{{ note.date | date: "%B %d, %Y" }}</a></li>
         {% endfor %}
       </ul>
     </li>
@@ -27,7 +27,7 @@ title: Home
   {% assign notes = site.pages | where: "dir", "/notes/daily_notes" %}
   {% assign dates = notes | map: "name" | map: "slice", 0, 7 | uniq %}
   {% for date in dates %}
-    <option value="https://myshare.ink/notes/daily_notes/{{ date }}.html">{{ date }}</option>
+    <option value="{{ site.baseurl }}/notes/{{ date }}.html">{{ date }}</option>
   {% endfor %}
 </select>
 

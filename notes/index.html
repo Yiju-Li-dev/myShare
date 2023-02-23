@@ -6,8 +6,14 @@ title: Home
 <h1>Things to Do</h1>
 <p><a href="{{ site.baseurl }}/notes/things_todo.html">View things to do</a></p>
 
-{% assign notes = site.pages | where: "dir", "/notes/daily_notes" %}
+{% assign notes = site.pages |  sort: "url" %}
 
 {% for note in notes %}
-  <p><a href="{{ note.url }}">{{ note.title | default: note.url }}</a></p>
+  {% if note.url contains "/notes/daily_notes/" %}
+    <p><a href="{{ note.url }}">{{ note.title | default: note.url }}</a></p>
+  {% endif %}
+{% endfor %}
+
+{% for page in notes %}
+  <p>{{ page.url }}</p>
 {% endfor %}

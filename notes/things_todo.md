@@ -30,3 +30,4 @@
 - [整理房间之后]华为手表充电
 - [整理房间之后]苹果手表充电
 - digital ocrean 归档
+- iphone shortcuts

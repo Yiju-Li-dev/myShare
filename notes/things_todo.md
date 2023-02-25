@@ -22,3 +22,6 @@
 - [整理房间之后]苹果手表充电
 - digital ocrean 归档
 - iphone shortcuts
+
+## 购物清单
+- 淋浴头

@@ -1,11 +1,11 @@
-# CSE 141L Milestone 1
+# CSE 141L Report
 - Yiju Li, A16637309
 - Haochen Wang, A17000549
 - Sandy Wu, A16460868
 
 
 ## TOC
-- [CSE 141L Milestone 1](#cse-141l-milestone-1)
+- [CSE 141L Report](#cse-141l-report)
   - [TOC](#toc)
   - [Academic Integrity](#academic-integrity)
   - [Team](#team)

@@ -472,7 +472,6 @@ void recoverMessage(unsigned int *originalMessage) {
       ; r[6] = errorPos = 0
       hsd 0 0
       ldh 0 6
-      ;
       ; r[7] = MAX_DATA-1 = 14
       hsd 0 14
       ldh 0 7

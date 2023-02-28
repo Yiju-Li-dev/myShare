@@ -17,7 +17,7 @@
   - [Individual Component Specification](#individual-component-specification)
   - [ASM to Machine Code](#asm-to-machine-code)
     - [ASM notice](#asm-notice)
-    - [Normal ASM to MachineCode](#normal-asm-to-machinecode)
+    - [ASM to MachineCode](#asm-to-machinecode)
     - [Special ASM to MachineCode](#special-asm-to-machinecode)
   - [Program Implementations](#program-implementations)
     - [Program 1](#program-1)
@@ -197,7 +197,7 @@ Because our special design of the ISA, some operations are more complex than the
   - MIPS: `bne $x, $y, DEST`
   - Ours: `ldh 0 $x`, `ldh 1 $y`, `SETl DEST`, `SETu DEST`, `Setb`, `bne`
 
-### Normal ASM to MachineCode
+### ASM to MachineCode
   | Mnemonic | Meaning                                   | Type | opCode | func | Format     | Result                      |
   | -------- | ----------------------------------------- | ---- | ------ | ---- | ---------- | --------------------------- |
   | hsd      | Set the value of holder directly          | P    | 00     | 00   | hsd 0 x    | R[h0] = x                   |

@@ -198,36 +198,38 @@ Because our special design of the ISA, some operations are more complex than the
   - Ours: `ldh 0 $x`, `ldh 1 $y`, `SETl DEST`, `SETu DEST`, `Setb`, `bne`
 
 ### ASM to MachineCode
-  | Mnemonic | Meaning                                   | Type | opCode | func | Format     | Result                      |
-  | -------- | ----------------------------------------- | ---- | ------ | ---- | ---------- | --------------------------- |
-  | hsd      | Set the value of holder directly          | P    | 00     | 00   | hsd 0 x    | R[h0] = x                   |
-  | hsr      | Set the value of holder from the register | P    | 00     | 01   | hsr 1 R[x] | R[h1] = R[x]                |
-  | hsdu     | Set the upper value of holder directly    | P    | 00     | 10   | hsdu 0 x   | R[h0] = R[h0][3:0] + x<<4   |
-  | ldh      | Load holder to reigister                  | P    | 00     | 11   | ldh 0 R[x] | R[x] = R[0]                 |
-  | load     | Load with full address                    | M    | 01     | 000  | load R[x]  | R[x] = mem[ R[h0] ~ R[h1] ] |
-  | save     | Save with full address                    | M    | 01     | 001  | save R[x]  | mem[ R[h0] ~ R[h1] ] = R[x] |
-  | loadi    | Load with in-complete address             | M    | 01     | 010  | loadi R[x] | R[x] = mem[ R[h0] ]         |
-  | savei    | Save with in-complete address             | M    | 01     | 011  | savei R[x] | mem[R[h0]] = R[x]           |
-  | lss      | Left shift and save                       | O    | 10     | 000  | lss R[x]   | R[x] = R[x] << R[0]         |
-  | rss      | Right shift and save                      | O    | 10     | 001  | rss R[x]   | R[x] = R[x] >> R[0]         |
-  | xors     | Bitwise XOR and save                      | O    | 10     | 010  | xors R[x]  | R[x] = R[x] ^ R[0]          |
-  | adds     | Add and save                              | O    | 10     | 011  | adds R[x]  | R[x] = R[x] + R[0]          |
-  | ands     | Bitwise AND and save                      | O    | 10     | 100  | ands R[x]  | R[x] = R[x] AND R[0]        |
-  | jump     | Alter PC to value in selected register    | C    | 11     | 00   | jumpf x    | PC = R[x]                   |
-  | bne      | Branch if Not Equal                       | C    | 11     | 01   | bne x      | if R[0] != R[1], PC=R[x]    |
-  | bl       | Branch if less                            | C    | 11     | 10   | bl x       | if R[0] < R[1], PC = R[x]   |
-  | bg       | Branch if greater                         | C    | 11     | 11   | bg  x      | if R[0] > R[1], PC = R[x]   |
+
+| Mnemonic | Meaning                                   | Type | opCode | func | Format     | Result                      |
+| -------- | ----------------------------------------- | ---- | ------ | ---- | ---------- | --------------------------- |
+| hsd      | Set the value of holder directly          | P    | 00     | 00   | hsd 0 x    | R[h0] = x                   |
+| hsr      | Set the value of holder from the register | P    | 00     | 01   | hsr 1 R[x] | R[h1] = R[x]                |
+| hsdu     | Set the upper value of holder directly    | P    | 00     | 10   | hsdu 0 x   | R[h0] = R[h0][3:0] + x<<4   |
+| ldh      | Load holder to reigister                  | P    | 00     | 11   | ldh 0 R[x] | R[x] = R[0]                 |
+| load     | Load with full address                    | M    | 01     | 000  | load R[x]  | R[x] = mem[ R[h0] ~ R[h1] ] |
+| save     | Save with full address                    | M    | 01     | 001  | save R[x]  | mem[ R[h0] ~ R[h1] ] = R[x] |
+| loadi    | Load with in-complete address             | M    | 01     | 010  | loadi R[x] | R[x] = mem[ R[h0] ]         |
+| savei    | Save with in-complete address             | M    | 01     | 011  | savei R[x] | mem[R[h0]] = R[x]           |
+| lss      | Left shift and save                       | O    | 10     | 000  | lss R[x]   | R[x] = R[x] << R[0]         |
+| rss      | Right shift and save                      | O    | 10     | 001  | rss R[x]   | R[x] = R[x] >> R[0]         |
+| xors     | Bitwise XOR and save                      | O    | 10     | 010  | xors R[x]  | R[x] = R[x] ^ R[0]          |
+| adds     | Add and save                              | O    | 10     | 011  | adds R[x]  | R[x] = R[x] + R[0]          |
+| ands     | Bitwise AND and save                      | O    | 10     | 100  | ands R[x]  | R[x] = R[x] AND R[0]        |
+| jump     | Alter PC to value in selected register    | C    | 11     | 00   | jumpf x    | PC = R[x]                   |
+| bne      | Branch if Not Equal                       | C    | 11     | 01   | bne x      | if R[0] != R[1], PC=R[x]    |
+| bl       | Branch if less                            | C    | 11     | 10   | bl x       | if R[0] < R[1], PC = R[x]   |
+| bg       | Branch if greater                         | C    | 11     | 11   | bg  x      | if R[0] > R[1], PC = R[x]   |
 
 ### Special ASM to MachineCode
-  | Mnemonic | Meaning                               | Format    | ASM CODE         | Result                    |
-  | -------- | ------------------------------------- | --------- | ---------------- | ------------------------- |
-  | SETl     | Set the lower part of the PC register | SETl DEST | hsd 0 DEST[3:0]  | R[0] = DEST[3:0]          |
-  | SETu     | Set the upper part of the PC register | SETu DEST | hsdu 0 DEST[7:4] | R[0] = DEST[7:4]          |
-  | SETb     | Move data from R[0] to  R[2]          | SETb      | ldh 0 2          | R[2] = R[0]               |
-  | jump     | jump with no select register          | jumpf     | jumpf 0          | PC = R[0]                 |
-  | bne      | bne with no select register           | bne       | bne 2            | if R[0] != R[1], PC=R[2]  |
-  | bl       | bl with no select register            | bl        | bl 2             | if R[0] < R[1], PC = R[2] |
-  | bg       | bg with no select register            | bg        | bg 2             | if R[0] > R[1], PC = R[2] |
+
+| Mnemonic | Meaning                               | Format    | ASM CODE         | Result                    |
+| -------- | ------------------------------------- | --------- | ---------------- | ------------------------- |
+| SETl     | Set the lower part of the PC register | SETl DEST | hsd 0 DEST[3:0]  | R[0] = DEST[3:0]          |
+| SETu     | Set the upper part of the PC register | SETu DEST | hsdu 0 DEST[7:4] | R[0] = DEST[7:4]          |
+| SETb     | Move data from R[0] to  R[2]          | SETb      | ldh 0 2          | R[2] = R[0]               |
+| jump     | jump with no select register          | jumpf     | jumpf 0          | PC = R[0]                 |
+| bne      | bne with no select register           | bne       | bne 2            | if R[0] != R[1], PC=R[2]  |
+| bl       | bl with no select register            | bl        | bl 2             | if R[0] < R[1], PC = R[2] |
+| bg       | bg with no select register            | bg        | bg 2             | if R[0] > R[1], PC = R[2] |
 
 ## Program Implementations
 ### Program 1

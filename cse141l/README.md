@@ -3,4 +3,4 @@
 ## CSE141L
 
 - [Project Writeup](./cse141L_project.md)
-- [Project Milestone1 Report](./cse141L_report)
+- [Project Milestone Report](./cse141L_report)

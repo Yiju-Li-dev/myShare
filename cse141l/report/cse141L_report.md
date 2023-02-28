@@ -39,9 +39,9 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
 
 ## Team
 
-| Team Name| Members | 
-| --- | --- |
-| The Three Body | Yiju Li, Haochen Wang, Sandy Wu|
+| Team Name      | Members                         |
+| -------------- | ------------------------------- |
+| The Three Body | Yiju Li, Haochen Wang, Sandy Wu |
 
 ## Introduction
 - Machine Name
@@ -75,25 +75,26 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
     - Format: opcode(2 bits)+func(2 bit)+input(5 bits)
 - Note our machine does not necessarily need to be seperated into these types. But for better scalability in the future, let's leave it as this.
   
-  | Mnemonic | Meaning | Type | opCode | func |Format| Result |
-  | --- | --- | --- | --- | --- | --- | --- |
-  | hsd | Set the value of holder directly | P | 00 | 00 |hsd 0 x | R[h0] = x
-  | hsr | Set the value of holder from the register| P | 00 | 01 |hsr 1 R[x] | R[h1] = R[x]
-  | hclr | Cleaning the holders | P | 00 | 10 | hclr | R[h0]=0, R[h1] = 0
-  |ldh | Load holder to reigister | P | 00 | 11 | ldh 0 R[x] | R[x] = R[0]
-  | load | Load with full address| M | 01 | 000| load R[x] | R[x] = mem[ R[h0] ~ R[h1] ]
-  | save | Save with full address | M | 01|001 | save R[x] | mem[ R[h0] ~ R[h1] ] = R[x]
-  | loadi| Load with in-complete address | M | 01 | 010 | loadi R[x] | R[x] = mem[ R[h0] ]
-  | savei| Save with in-complete address | M | 01 | 011 | savei R[x]  | mem[R[h0]] = R[x]
-  | lss | Left shift and save | O |10|000 | lss R[x]| R[x] = R[x] << R[0] |
-  |rss | Right shift and save | O | 10 | 001 | rss R[x]| R[x] = R[x] >> R[0]
-  |xors | Bitwise XOR and save| O | 10 | 010 | xors R[x] | R[x] = R[x] ^ R[0]
-  |adds | Add and save | O | 10 | 011 | adds R[x] | R[x] = R[x] + R[0]
-  |ands| Bitwise AND and save | O | 10 | 100 | ands R[x] | R[x] = R[x] AND R[0]
-  |jumpf | Alter PC to some given value with fake absolute| C | 11 |00 | jumpf X  | PC = X
-  |bne | 	Branch if Not Equal | C | 11 |01 | bne X  | if R[0] != R[1], PC=X
-  |bl | Branch if less | C | 11| 10 | bl X  | if R[0] < R[1], PC = X
-  |bg | Branch if greater| C | 11 | 11 | bg X | if R[0] > R[1], PC = X
+  | Mnemonic | Meaning                                         | Type | opCode | func | Format     | Result                      |
+  | -------- | ----------------------------------------------- | ---- | ------ | ---- | ---------- | --------------------------- |
+  | hsd      | Set the value of holder directly                | P    | 00     | 00   | hsd 0 x    | R[h0] = x                   |
+  | hsr      | Set the value of holder from the register       | P    | 00     | 01   | hsr 1 R[x] | R[h1] = R[x]                |
+  | hsdu     | Set the upper value of holder directly          | P    | 00     | 10   | hsdu 0 x   | R[h0] = R[h0][3:0] + x<<4   |
+  | ldh      | Load holder to reigister                        | P    | 00     | 11   | ldh 0 R[x] | R[x] = R[0]                 |
+  | load     | Load with full address                          | M    | 01     | 000  | load R[x]  | R[x] = mem[ R[h0] ~ R[h1] ] |
+  | save     | Save with full address                          | M    | 01     | 001  | save R[x]  | mem[ R[h0] ~ R[h1] ] = R[x] |
+  | loadi    | Load with in-complete address                   | M    | 01     | 010  | loadi R[x] | R[x] = mem[ R[h0] ]         |
+  | savei    | Save with in-complete address                   | M    | 01     | 011  | savei R[x] | mem[R[h0]] = R[x]           |
+  | lss      | Left shift and save                             | O    | 10     | 000  | lss R[x]   | R[x] = R[x] << R[0]         |
+  | rss      | Right shift and save                            | O    | 10     | 001  | rss R[x]   | R[x] = R[x] >> R[0]         |
+  | xors     | Bitwise XOR and save                            | O    | 10     | 010  | xors R[x]  | R[x] = R[x] ^ R[0]          |
+  | adds     | Add and save                                    | O    | 10     | 011  | adds R[x]  | R[x] = R[x] + R[0]          |
+  | ands     | Bitwise AND and save                            | O    | 10     | 100  | ands R[x]  | R[x] = R[x] AND R[0]        |
+  | jumpf    | Alter PC to some given value with fake absolute | C    | 11     | 00   | jumpf x    | PC = R[x]                   |
+  | bne      | Branch if Not Equal                             | C    | 11     | 01   | bne x      | if R[0] != R[1], PC=R[x]    |
+  | bl       | Branch if less                                  | C    | 11     | 10   | bl x       | if R[0] < R[1], PC = R[x]   |
+  | bg       | Branch if greater                               | C    | 11     | 11   | bg  x      | if R[0] > R[1], PC = R[x]   |
+  |          |                                                 |      |        |      |            |                             |
 - Operands
   
   | Name | Number | Comment | 

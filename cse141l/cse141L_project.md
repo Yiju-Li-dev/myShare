@@ -23,6 +23,11 @@
   - [How to Present Your Implementation](#how-to-present-your-implementation)
   - [Milestone 2 Components](#milestone-2-components)
   - [What to Submit?](#what-to-submit-2)
+- [Milestone 3 — An Assembler \& Early Integration](#milestone-3--an-assembler--early-integration)
+  - [Milestone 3 Objectives](#milestone-3-objectives)
+  - [Tasks](#tasks)
+  - [Milestone 3 Components](#milestone-3-components)
+  - [What to Submit?](#what-to-submit-3)
 
 # Introduction
 Your task this quarter is to design a custom processor that supports specific Forward Error 
@@ -407,5 +412,45 @@ that complicate your design?
 You will submit a written report that contains all of the required components of Milestones 1 
 and 2. It is your responsibility to make this report clear and well-organized.
 - Your report should be a single document, in PDF form.
+- Exception: You may include your program implementations as separate “source code” files 
+if you wish.
+
+# Milestone 3 — An Assembler & Early Integration
+
+Assemblers convert human-readable assembly code to computer-readable machine code. Your 
+code from Milestone 1 is the former, but your processors will need the latter.
+
+## Milestone 3 Objectives
+Implement an assembler. Begin the process of integrating your processor components.
+ 
+## Tasks
+1. Write an assembler which converts your assembly code from Milestone 1 into 9-bit 
+binary machine code. We will provide sample code, but you may use any language you 
+wish. This should be a fairly simple string access, map, print sequence.
+2. If you have not already done so in Milestone 2, write a top-level SystemVerilog model of 
+your design which instantiates the ALU, fetch (program counter) unit, instruction 
+memory (either inside fetch or separate), register file, data memory, control decoder, 
+and any other blocks you need. This does not need to actually run the three problems 
+yet — that will be the final piece — but it should compile cleanly in both 
+Questa/ModelSim and Quartus II.
+
+## Milestone 3 Components
+Your Milestone 3 report should add on to your Milestone 2 report.
+Your Milestone 3 report must include a changelog that indicates where any significant changes 
+have been made since your Milestone 2 submission.
+Your Milestone 3 reports must add the following. You may add these to existing sections in your 
+report or add new sections, as you deem appropriate:
+- An example of input to and output from your assembler.
+    - [unlikely]: If your assembler does anything beyond what a ‘normal’ assembler 
+would be expected to do, explain this as well.
+- Your Architectural Overview figure should be revised with more detail / needed 
+updates. [Might you be able to automate this drawing now?]
+
+## What to Submit?
+You will submit a written report that contains all of the required components of Milestones 1, 
+2, and 3. It is your responsibility to make this report clear and well-organized.
+WI22 - CSE141L CC-BY-NC-ND © Pat Pannuto, John Eldon, Dean Tullsen, & the UCSD Architecture Faculty v.1.0.0
+16
+Your report should be a single document, in PDF form.
 - Exception: You may include your program implementations as separate “source code” files 
 if you wish.

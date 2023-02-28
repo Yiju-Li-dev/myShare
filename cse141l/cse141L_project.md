@@ -449,8 +449,6 @@ updates. [Might you be able to automate this drawing now?]
 ## What to Submit?
 You will submit a written report that contains all of the required components of Milestones 1, 
 2, and 3. It is your responsibility to make this report clear and well-organized.
-WI22 - CSE141L CC-BY-NC-ND © Pat Pannuto, John Eldon, Dean Tullsen, & the UCSD Architecture Faculty v.1.0.0
-16
 Your report should be a single document, in PDF form.
 - Exception: You may include your program implementations as separate “source code” files 
 if you wish.

@@ -431,7 +431,7 @@ LOOP  hsr          0   $15
       hsr          0   $1
       savei        $6
 
-      hds          0   1
+      hsd          0   1
       adds         $15
       jump LOOP          
 DONE
@@ -461,77 +461,85 @@ void recoverMessage(unsigned int *originalMessage) {
 ```
 ```asm
       ; r[3] = i = 0
-      hsd 3 0 
+      hsd 0 0
+      ldh 0 3
       ;r[4] = data = 0
-      hsd 4 0
+      hsd 0 0
+      ldh 0 4
       ;r[5] = errorFlag = 0
-      hsd 5 0
+      hsd 0 0
+      ldh 0 5
       ; r[6] = errorPos = 0
-      hsd 6 0
+      hsd 0 0
+      ldh 0 6
       ;
-      DEFINE MAX_DATA=15
+      ; r[7] = MAX_DATA-1 = 14
+      hsd 0 14
+      ldh 0 7
 
 LOOP  
       ; r[0] = r[3] = i
-      hsr 0 $3
-      ; [TODO] r[1] = MAX_DATA-1
-      hsd 1 MAX_DATA-1
+      hsr 0 3
+      ; r[1] = r[7] = MAX_DATA-1
+      hsr 1 7
       ; if r[0] > r[1], DONE
       bg DONE
       ; r[1] = 30
       hsd 1 30
       ; r[1] = r[1] + r[0] = 30+i
-      adds $1
+      adds 1
       ; r[0] = r[1] = 30+i
-      hsr 0 $1
+      hsr 0 1
       ; r[4] = data = mem[r[0]] = mem[30+i]
-      loadi $4
+      loadi 4
       ; r[0] = 14
       hsd 0 14
       ; r[5] = errorFlag = r[4] = data
-      hsr 5 $4
+      hsr 1 4
+      ldh 1 5
       ; r[5] = errorFlag = r[5] >> r[0] = data >> 14
-      rss $5
+      rss 5
       ; r[6] = errorPos = r[4] = data
-      hsr 6 $4
+      hsr 1 4
+      ldh 1 6
       ; r[0] = 0x3FFF = 16383
       hsd 0 16383
       ; r[6] = errorPos = r[6] & r[0] = data & 0x3FFF
-      ands $6
+      ands 6
       ; r[0] = r[5] = errorFlag
-      hsr 0 $5
+      hsr 0 5
       ; r[1] = 0
       hsd 1 0
       ; if r[0] != r[1], go to SINGLE
       bne SINGLE
       ; r[0] = r[3] = i
-      hsr 0 $3
+      hsr 0 3
       ; mem[r[0]] mem[i] = r[6] = errorPos
-      savei $6
+      savei 6
       ; go to ITERATION
       jumpf ITERATION
 
 SINGLE
       ; r[0] = r[5] = errorFlag
-      hsr 0 $5
+      hsr 0 5
       ; r[1] = 0x4000 = 16384
       hsd 1 16384
       ; if r[0] != r[1], go to DOUBLE
       bne DOUBLE
       ; r[1] = r[6] = errorPos
-      hsr 1 $6
+      hsr 1 6
       ; r[1] = r[1] ^ r[0] = errorPos ^ errorFlag
-      xors $1
+      xors 1
       ; r[0] = r[3] = i
-      hsr 0 $3
+      hsr 0 3
       ; mem[r[0]] = mem[i] = r[1] = errorPos ^ errorFlag
-      savei $1
+      savei 1
       ; go to ITERATION
       jumpf ITERATION
 
 DOUBLE
       ; r[0] = r[3] = i
-      hsr 0 $3
+      hsr 0 3
       ; [TODO] mem[r[0]] = mem[i] = ERROR_STATE
       savei $ERROR_STATE 
 
@@ -539,7 +547,7 @@ ITERATION
       ; r[0] = 1
       hsd 0 1
       ; r[3] = r[3] + r[0] = i+1
-      adds $3
+      adds 3
       ; go to LOOP
       jumpf LOOP
 

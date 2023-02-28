@@ -1,11 +1,11 @@
-# CSE 141L Report
+# CSE 141L Milestone 2
 - Yiju Li, A16637309
 - Haochen Wang, A17000549
 - Sandy Wu, A16460868
 
 
 ## TOC
-- [CSE 141L Report](#cse-141l-report)
+- [CSE 141L Milestone 2](#cse-141l-milestone-2)
   - [TOC](#toc)
   - [Academic Integrity](#academic-integrity)
   - [Team](#team)
@@ -13,10 +13,17 @@
   - [Architectural Overview](#architectural-overview)
   - [Machine Specification](#machine-specification)
   - [Programmer’s Model](#programmers-model)
+  - [ALU Implementation](#alu-implementation)
+  - [Individual Component Specification](#individual-component-specification)
+  - [ASM to Machine Code](#asm-to-machine-code)
+    - [ASM notice](#asm-notice)
+    - [Normal ASM to MachineCode](#normal-asm-to-machinecode)
+    - [Special ASM to MachineCode](#special-asm-to-machinecode)
   - [Program Implementations](#program-implementations)
     - [Program 1](#program-1)
     - [Program 2](#program-2)
     - [Program 3](#program-3)
+  - [Changelog](#changelog)
 
 ## Academic Integrity
 
@@ -36,9 +43,9 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
 
 ## Team
 
-| Team Name| Members | 
-| --- | --- |
-| The Three Body | Yiju Li, Haochen Wang, Sandy Wu|
+| Team Name      | Members                         |
+| -------------- | ------------------------------- |
+| The Three Body | Yiju Li, Haochen Wang, Sandy Wu |
 
 ## Introduction
 - Machine Name
@@ -52,7 +59,7 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
   - The goals of our machine is solely to help our group to achieve A+ for this course.
 
 ## Architectural Overview
-![test](archi.png)
+![test](images/arch.jpg)
 
 [//]: <> (To edit the picture above, simply download draw.io integration in VS code)
 
@@ -72,25 +79,26 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
     - Format: opcode(2 bits)+func(2 bit)+input(5 bits)
 - Note our machine does not necessarily need to be seperated into these types. But for better scalability in the future, let's leave it as this.
   
-  | Mnemonic | Meaning | Type | opCode | func |Format| Result |
-  | --- | --- | --- | --- | --- | --- | --- |
-  | hsd | Set the value of holder directly | P | 00 | 00 |hsd 0 x | R[h0] = x
-  | hsr | Set the value of holder from the register| P | 00 | 01 |hsr 1 R[x] | R[h1] = R[x]
-  | hclr | Cleaning the holders | P | 00 | 10 | hclr | R[h0]=0, R[h1] = 0
-  |ldh | Load holder to reigister | P | 00 | 11 | ldh 0 R[x] | R[x] = R[0]
-  | load | Load with full address| M | 01 | 000| load R[x] | R[x] = mem[ R[h0] ~ R[h1] ]
-  | save | Save with full address | M | 01|001 | save R[x] | mem[ R[h0] ~ R[h1] ] = R[x]
-  | loadi| Load with in-complete address | M | 01 | 010 | loadi R[x] | R[x] = mem[ R[h0] ]
-  | savei| Save with in-complete address | M | 01 | 011 | savei R[x]  | mem[R[h0]] = R[x]
-  | lss | Left shift and save | O |10|000 | lss R[x]| R[x] = R[x] << R[0] |
-  |rss | Right shift and save | O | 10 | 001 | rss R[x]| R[x] = R[x] >> R[0]
-  |xors | Bitwise XOR and save| O | 10 | 010 | xors R[x] | R[x] = R[x] ^ R[0]
-  |adds | Add and save | O | 10 | 011 | adds R[x] | R[x] = R[x] + R[0]
-  |ands| Bitwise AND and save | O | 10 | 100 | ands R[x] | R[x] = R[x] AND R[0]
-  |jumpf | Alter PC to some given value with fake absolute| C | 11 |00 | jumpf X  | PC = X
-  |bne | 	Branch if Not Equal | C | 11 |01 | bne X  | if R[0] != R[1], PC=X
-  |bl | Branch if less | C | 11| 10 | bl X  | if R[0] < R[1], PC = X
-  |bg | Branch if greater| C | 11 | 11 | bg X | if R[0] > R[1], PC = X
+  | Mnemonic | Meaning                                         | Type | opCode | func | Format     | Result                      |
+  | -------- | ----------------------------------------------- | ---- | ------ | ---- | ---------- | --------------------------- |
+  | hsd      | Set the value of holder directly                | P    | 00     | 00   | hsd 0 x    | R[h0] = x                   |
+  | hsr      | Set the value of holder from the register       | P    | 00     | 01   | hsr 1 R[x] | R[h1] = R[x]                |
+  | hsdu     | Set the upper value of holder directly          | P    | 00     | 10   | hsdu 0 x   | R[h0] = R[h0][3:0] + x<<4   |
+  | ldh      | Load holder to reigister                        | P    | 00     | 11   | ldh 0 R[x] | R[x] = R[0]                 |
+  | load     | Load with full address                          | M    | 01     | 000  | load R[x]  | R[x] = mem[ R[h0] ~ R[h1] ] |
+  | save     | Save with full address                          | M    | 01     | 001  | save R[x]  | mem[ R[h0] ~ R[h1] ] = R[x] |
+  | loadi    | Load with in-complete address                   | M    | 01     | 010  | loadi R[x] | R[x] = mem[ R[h0] ]         |
+  | savei    | Save with in-complete address                   | M    | 01     | 011  | savei R[x] | mem[R[h0]] = R[x]           |
+  | lss      | Left shift and save                             | O    | 10     | 000  | lss R[x]   | R[x] = R[x] << R[0]         |
+  | rss      | Right shift and save                            | O    | 10     | 001  | rss R[x]   | R[x] = R[x] >> R[0]         |
+  | xors     | Bitwise XOR and save                            | O    | 10     | 010  | xors R[x]  | R[x] = R[x] ^ R[0]          |
+  | adds     | Add and save                                    | O    | 10     | 011  | adds R[x]  | R[x] = R[x] + R[0]          |
+  | ands     | Bitwise AND and save                            | O    | 10     | 100  | ands R[x]  | R[x] = R[x] AND R[0]        |
+  | jumpf    | Alter PC to some given value with fake absolute | C    | 11     | 00   | jumpf x    | PC = R[x]                   |
+  | bne      | Branch if Not Equal                             | C    | 11     | 01   | bne x      | if R[0] != R[1], PC=R[x]    |
+  | bl       | Branch if less                                  | C    | 11     | 10   | bl x       | if R[0] < R[1], PC = R[x]   |
+  | bg       | Branch if greater                               | C    | 11     | 11   | bg  x      | if R[0] > R[1], PC = R[x]   |
+  |          |                                                 |      |        |      |            |                             |
 - Operands
   
   | Name | Number | Comment | 
@@ -105,29 +113,121 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
   - `bl`
   - `bg`
   
-  The address of these braches are calculated relatively, and the maximum distance supoorted is $$2^5$$ lines, currently.
+  The address of these braches are calculated relatively, and the maximum distance supoorted is $2^5$ lines, currently.
 - Addressing
   - Jump(Direct)
     - Enabled: Yes
     - Explanationn: Jump to abosolute address
-    - Max. Distance: $$2^{12}$$ lines. 
+    - Max. Distance: $2^{12}$ lines. 
   - branch(Immediate)
     - Enabled: Yes
     - Explanationn: Set PC to relative address
-    - Max. Distance: $$2^{5}$$ lines. 
+    - Max. Distance: $2^{5}$ lines. 
   - save/load(Direct)
     - Enabled: Yes
     - Explanationn: Jump to abosolute address
-    - Max. Distance: $$2^{8}$$ lines. 
+    - Max. Distance: $2^{8}$ lines. 
   - savei/loadi(Immediate)
     - Enabled: Yes
     - Explanationn: Jump to abosolute address
-    - Max. Distance: $$2^{5}$$ lines. 
+    - Max. Distance: $2^{5}$ lines. 
 
 ## Programmer’s Model
 - The way of operation
     - Due to the limitations on the registers, our machine uses the "load-operations-save-load" model, meaning that we would recommend the programmer seperate the loading behaviours into different steps, instead of loading all the data at once. In other words, our machine requires the knowledge of how the data is structures before the operations.
   - One could compile the code from ARM/MIPS to Wallfacer(our machine) and vice versa. However, it won't work at all if one just simply copy the code. This is because that we implement with similar logic to ARM/MIPS but with different design, such that there's at most one operand for each instruction.
+
+## ALU Implementation
+- Our ALU only supports logical instructions, such as left shift, right shift, XOR, ADD, and AND, and will not be used for non-arithmetic instructions.
+
+## Individual Component Specification
+  - Top Level 
+    - Module file name: top_level
+    - Functioanlity Description: The top level module of our machine is responsible for creating connections between different submodules by designing and implementing necessary datapaths and control signals, serving as a primary interface between the submodules and the external environment. It coordinates the activities of different submodules to ensure that the machine functions as intended.
+    - Schematic: ![test](images/top-level.png)
+  - Program Counter
+    - Module file name: PC
+    - Module testbench file name: pc_test
+    - Functioanlity Description: The program counter module keeps track of the memory address where the next instruction of the program is stored, allowing the CPU to execute instructions in the right order. It also handles branch instructions, which can make the PC jump to a different part of the program.
+    - (Optional) Testbench Description: TODO. Describe your testbench. How does it work? What test cases does it test?
+    - Schematic: ![test](images/PC.PNG)
+    - (Optional) Timing Diagram: TODO. Show us a screenshot of the timing diagram that demonstrates all relevant functions of  the fetch unit.
+  - Instruction Memory
+    - Module file name: instr_ROM
+    - Functioanlity Description: The instruction memory module stores the program instructions in memory and provides them to the CPU as needed. When the CPU needs to execute an instruction, it requests it from the instruction memory module by specifying the address of the instruction in memory. The instruction memory module then reads the contents of that memory address and sends it to the CPU for execution.
+    - Schematic: ![test](images/instr_ROM.PNG)
+  - Control Decoder
+    - Module file name: control
+    - Functioanlity Description: The control decoder module receives the binary instruction code from the instruction register and decodes it into a set of control signals that direct the operation of the CPU's other functional units, such as the arithmetic logic unit (ALU), registers, and memory.
+    - Schematic: ![test](images/control.PNG)
+  - Register File
+    - Module file name: reg_file
+    - Functioanlity Description: The register file module consists of 16 8-bit registers that can hold binary data temporarily during program execution. During program execution, data is loaded into the register file from memory or other sources, such as input/output devices. The CPU can then access the data in the register file very quickly without having to use slower memory storage.
+    - Schematic: ![test](images/reg.PNG)
+  - ALU (Arithmetic Logic Unit)
+    - Module file name: alu
+    - Module testbench file name: alu_Tb
+    - Functioanlity Description: The ALU module performs arithmetic and logical operations on data that is stored in registers or memory. It receives instructions from the CPU control unit and operates on the data according to those instructions.
+    - (Optional) Testbench Description: TODO. Describe your testbench. How does it work? What test cases does it test?
+    - ALU Operations: We will be demonstrating "left shift and save"(lss), "right shift and save"(rss), "Bitwise XOR and save"(xors), "Add and save"(adds), and "Bitwise AND and save"(ands).
+    - Schematic: ![test](images/alu.PNG)
+    - (Optional) Timing Diagram: TODO. Show us a screenshot of the timing diagram that demonstrates all relevant functions of  the fetch unit.
+  - Data Memory
+    - Module file name: dat_mem
+    - Functioanlity Description: The data memory module is designed to hold data temporarily or permanently so that it can be accessed by the processor when needed. When the processor needs to read or write data, it sends the address of the memory cell to the data memory module, which then retrieves or stores the data at that location. 
+    - Schematic: ![test](images/data_mem.PNG)
+  - Muxes (Multiplexers)
+    - Module file name: mux
+    - Functioanlity Description: The muxes module selects one input signal from four input signals based on the value of the control signal. The selected input signal is then passed through to the output of the module.
+    - Schematic: ![test](images/mux.PNG)
+
+## ASM to Machine Code
+### ASM notice
+Because our special design of the ISA, some operations are more complex than the normal ones:
+- ASM Example - Add: `R[x] = R[x] + R[y]`:
+  - MIPS: `add $x, $x, $y`
+  - Ours: `hsr 0 $y`, `adds $x`
+- ASM Example - Add intermidiate: `R[x] = R[x] + imm`
+  - MIPS: `add $x, $x, imm`
+  - Ours: `hsd 0 imm`, `adds $x`
+- Jump Example - jump: PC = DEST
+  - MIPS: `jump DEST`
+  - Ours: `SETl DEST`, `SETu DEST`, `jump`
+- Brach Example - bne: `if R[x] != R[y]: PC = DEST`
+  - MIPS: `bne $x, $y, DEST`
+  - Ours: `ldh 0 $x`, `ldh 1 $y`, `SETl DEST`, `SETu DEST`, `Setb`, `bne`
+
+### Normal ASM to MachineCode
+  | Mnemonic | Meaning                                   | Type | opCode | func | Format     | Result                      |
+  | -------- | ----------------------------------------- | ---- | ------ | ---- | ---------- | --------------------------- |
+  | hsd      | Set the value of holder directly          | P    | 00     | 00   | hsd 0 x    | R[h0] = x                   |
+  | hsr      | Set the value of holder from the register | P    | 00     | 01   | hsr 1 R[x] | R[h1] = R[x]                |
+  | hsdu     | Set the upper value of holder directly    | P    | 00     | 10   | hsdu 0 x   | R[h0] = R[h0][3:0] + x<<4   |
+  | ldh      | Load holder to reigister                  | P    | 00     | 11   | ldh 0 R[x] | R[x] = R[0]                 |
+  | load     | Load with full address                    | M    | 01     | 000  | load R[x]  | R[x] = mem[ R[h0] ~ R[h1] ] |
+  | save     | Save with full address                    | M    | 01     | 001  | save R[x]  | mem[ R[h0] ~ R[h1] ] = R[x] |
+  | loadi    | Load with in-complete address             | M    | 01     | 010  | loadi R[x] | R[x] = mem[ R[h0] ]         |
+  | savei    | Save with in-complete address             | M    | 01     | 011  | savei R[x] | mem[R[h0]] = R[x]           |
+  | lss      | Left shift and save                       | O    | 10     | 000  | lss R[x]   | R[x] = R[x] << R[0]         |
+  | rss      | Right shift and save                      | O    | 10     | 001  | rss R[x]   | R[x] = R[x] >> R[0]         |
+  | xors     | Bitwise XOR and save                      | O    | 10     | 010  | xors R[x]  | R[x] = R[x] ^ R[0]          |
+  | adds     | Add and save                              | O    | 10     | 011  | adds R[x]  | R[x] = R[x] + R[0]          |
+  | ands     | Bitwise AND and save                      | O    | 10     | 100  | ands R[x]  | R[x] = R[x] AND R[0]        |
+  | jump     | Alter PC to value in selected register    | C    | 11     | 00   | jumpf x    | PC = R[x]                   |
+  | bne      | Branch if Not Equal                       | C    | 11     | 01   | bne x      | if R[0] != R[1], PC=R[x]    |
+  | bl       | Branch if less                            | C    | 11     | 10   | bl x       | if R[0] < R[1], PC = R[x]   |
+  | bg       | Branch if greater                         | C    | 11     | 11   | bg  x      | if R[0] > R[1], PC = R[x]   |
+
+### Special ASM to MachineCode
+  | Mnemonic | Meaning                               | Format    | ASM CODE         | Result                    |
+  | -------- | ------------------------------------- | --------- | ---------------- | ------------------------- |
+  | SETl     | Set the lower part of the PC register | SETl DEST | hsd 0 DEST[3:0]  | R[0] = DEST[3:0]          |
+  | SETu     | Set the upper part of the PC register | SETu DEST | hsdu 0 DEST[7:4] | R[0] = DEST[7:4]          |
+  | SETb     | Move data from R[0] to  R[2]          | SETb      | ldh 0 2          | R[2] = R[0]               |
+  | jump     | jump with no select register          | jumpf     | jumpf 0          | PC = R[0]                 |
+  | bne      | bne with no select register           | bne       | bne 2            | if R[0] != R[1], PC=R[2]  |
+  | bl       | bl with no select register            | bl        | bl 2             | if R[0] < R[1], PC = R[2] |
+  | bg       | bg with no select register            | bg        | bg 2             | if R[0] > R[1], PC = R[2] |
 
 ## Program Implementations
 ### Program 1
@@ -384,7 +484,7 @@ LOOP  hsr          0   $15
       hsr          0   $1
       savei        $6
 
-      hds          0   1
+      hsd          0   1
       adds         $15
       jump LOOP          
 DONE
@@ -414,77 +514,84 @@ void recoverMessage(unsigned int *originalMessage) {
 ```
 ```asm
       ; r[3] = i = 0
-      hsd 3 0 
+      hsd 0 0
+      ldh 0 3
       ;r[4] = data = 0
-      hsd 4 0
+      hsd 0 0
+      ldh 0 4
       ;r[5] = errorFlag = 0
-      hsd 5 0
+      hsd 0 0
+      ldh 0 5
       ; r[6] = errorPos = 0
-      hsd 6 0
-      ;
-      DEFINE MAX_DATA=15
+      hsd 0 0
+      ldh 0 6
+      ; r[7] = MAX_DATA-1 = 14
+      hsd 0 14
+      ldh 0 7
 
 LOOP  
       ; r[0] = r[3] = i
-      hsr 0 $3
-      ; [TODO] r[1] = MAX_DATA-1
-      hsd 1 MAX_DATA-1
+      hsr 0 3
+      ; r[1] = r[7] = MAX_DATA-1
+      hsr 1 7
       ; if r[0] > r[1], DONE
       bg DONE
       ; r[1] = 30
       hsd 1 30
       ; r[1] = r[1] + r[0] = 30+i
-      adds $1
+      adds 1
       ; r[0] = r[1] = 30+i
-      hsr 0 $1
+      hsr 0 1
       ; r[4] = data = mem[r[0]] = mem[30+i]
-      loadi $4
+      loadi 4
       ; r[0] = 14
       hsd 0 14
       ; r[5] = errorFlag = r[4] = data
-      hsr 5 $4
+      hsr 1 4
+      ldh 1 5
       ; r[5] = errorFlag = r[5] >> r[0] = data >> 14
-      rss $5
+      rss 5
       ; r[6] = errorPos = r[4] = data
-      hsr 6 $4
+      hsr 1 4
+      ldh 1 6
       ; r[0] = 0x3FFF = 16383
       hsd 0 16383
       ; r[6] = errorPos = r[6] & r[0] = data & 0x3FFF
-      ands $6
+      ands 6
       ; r[0] = r[5] = errorFlag
-      hsr 0 $5
+      hsr 0 5
       ; r[1] = 0
       hsd 1 0
       ; if r[0] != r[1], go to SINGLE
       bne SINGLE
       ; r[0] = r[3] = i
-      hsr 0 $3
+      hsr 0 3
       ; mem[r[0]] mem[i] = r[6] = errorPos
-      savei $6
+      savei 6
       ; go to ITERATION
       jumpf ITERATION
 
 SINGLE
       ; r[0] = r[5] = errorFlag
-      hsr 0 $5
+      hsr 0 5
       ; r[1] = 0x4000 = 16384
       hsd 1 16384
       ; if r[0] != r[1], go to DOUBLE
       bne DOUBLE
       ; r[1] = r[6] = errorPos
-      hsr 1 $6
+      hsr 1 6
       ; r[1] = r[1] ^ r[0] = errorPos ^ errorFlag
-      xors $1
+      xors 1
       ; r[0] = r[3] = i
-      hsr 0 $3
+      hsr 0 3
       ; mem[r[0]] = mem[i] = r[1] = errorPos ^ errorFlag
-      savei $1
+      savei 1
       ; go to ITERATION
       jumpf ITERATION
 
 DOUBLE
       ; r[0] = r[3] = i
-      hsr 0 $3
+      hsr 0 3
       ; [TODO] mem[r[0]] = mem[i] = ERROR_STATE
       savei $ERROR_STATE 
 
@@ -492,7 +599,7 @@ ITERATION
       ; r[0] = 1
       hsd 0 1
       ; r[3] = r[3] + r[0] = i+1
-      adds $3
+      adds 3
       ; go to LOOP
       jumpf LOOP
 
@@ -900,3 +1007,12 @@ def program3():
   mem[35] = fullCount
 
 ```
+
+## Changelog
+  - Milestone 2
+    - Architecture Overview
+      - Included labels for wires
+      - Updated to a more clear and precise diagram
+  - Milestone 1
+    - Initial version
+

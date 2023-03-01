@@ -245,47 +245,47 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 #### ASM_super
 **ASM_super can generate multiple ASM_real, where ASM_real is 1-1 of the machine code**
 
-| Format              | ASM_real CODE                                                    |
-| ------------------- | ---------------------------------------------------------------- |
-| add R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `adds $x`                    |
-| add R[x] R[x] R[y]  | `hsr 0 $y`,               `adds $x`                              |
-| add R[x] R[y]       | `hsr 0 $y`,               `adds $x`                              |
-| addi R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `adds $x`                     |
-| addi R[x] R[x] y    | `hsd 0 y`,               `adds $x`                               |
-| addi R[x] y         | `hsd 0 y`,               `adds $x`                               |
-| xor R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `xors $x`                    |
-| xor R[x] R[x] R[y]  | `hsr 0 $y`,               `xors $x`                              |
-| xor R[x]  R[y]      | `hsr 0 $y`,               `xors $x`                              |
-| xori R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `xors $x`                     |
-| xori R[x] R[x] y    | `hsd 0 y`,               `xors $x`                               |
-| xori R[x]  y        | `hsd 0 y`,               `xors $x`                               |
-| and R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `ands $x`                    |
-| and R[x] R[x] R[y]  | `hsr 0 $y`,               `ands $x`                              |
-| and R[x] R[y]       | `hsr 0 $y`,               `ands $x`                              |
-| andi R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ands $x`                     |
-| andi R[x] R[x] y    | `hsd 0 y`,               `ands $x`                               |
-| andi R[x]  y        | `hsd 0 y`,               `ands $x`                               |
-| ls R[x] R[y] R[z]   | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `lss $x`                     |
-| ls R[x] R[x] R[y]   | `hsr 0 $y`,               `lss $x`                               |
-| ls R[x]  R[y]       | `hsr 0 $y`,               `lss $x`                               |
-| lsi R[x] R[y] z     | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `lss $x`                      |
-| lsi R[x] R[x] y     | `hsd 0 y`,               `lss $x`                                |
-| lsi R[x]  y         | `hsd 0 y`,               `lss $x`                                |
-| rs R[x] R[y] R[z]   | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `rss $x`                     |
-| rs R[x] R[x] R[y]   | `hsr 0 $y`,               `rss $x`                               |
-| rs R[x]  R[y]       | `hsr 0 $y`,               `rss $x`                               |
-| rsi R[x] R[y] z     | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `rss $x`                      |
-| rsi R[x] R[x] y     | `hsd 0 y`,               `rss $x`                                |
-| rsi R[x]  y         | `hsd 0 y`,               `rss $x`                                |
-| super_jump DEST     | `SETl DEST`, `SETu DEST`, `jump`                                 |
-| super_bne R[x] R[y] | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsr 1 $y`, `bne ` |
-| super_bl R[x] R[y]  | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsr 1 $y`, `bl `  |
-| super_bg R[x] R[y]  | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsr 1 $y`, `bg `  |
-| super_bne_i R[x] y  | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsd 1 y`, `bne `  |
-| super_bl_i R[x] y   | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsd 1 y`, `bl `   |
-| super_bg_i R[x] y   | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsd 1 y`, `bg `   |
-| load R[x] DEST      | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
-| save R[x] DEST      | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
+| Format                   | ASM_real CODE                                                    |
+| ------------------------ | ---------------------------------------------------------------- |
+| add R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `adds $x`                    |
+| add R[x] R[x] R[y]       | `hsr 0 $y`,               `adds $x`                              |
+| add R[x] R[y]            | `hsr 0 $y`,               `adds $x`                              |
+| addi R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `adds $x`                     |
+| addi R[x] R[x] y         | `hsd 0 y`,               `adds $x`                               |
+| addi R[x] y              | `hsd 0 y`,               `adds $x`                               |
+| xor R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `xors $x`                    |
+| xor R[x] R[x] R[y]       | `hsr 0 $y`,               `xors $x`                              |
+| xor R[x]  R[y]           | `hsr 0 $y`,               `xors $x`                              |
+| xori R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `xors $x`                     |
+| xori R[x] R[x] y         | `hsd 0 y`,               `xors $x`                               |
+| xori R[x]  y             | `hsd 0 y`,               `xors $x`                               |
+| and R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `ands $x`                    |
+| and R[x] R[x] R[y]       | `hsr 0 $y`,               `ands $x`                              |
+| and R[x] R[y]            | `hsr 0 $y`,               `ands $x`                              |
+| andi R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ands $x`                     |
+| andi R[x] R[x] y         | `hsd 0 y`,               `ands $x`                               |
+| andi R[x]  y             | `hsd 0 y`,               `ands $x`                               |
+| ls R[x] R[y] R[z]        | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `lss $x`                     |
+| ls R[x] R[x] R[y]        | `hsr 0 $y`,               `lss $x`                               |
+| ls R[x]  R[y]            | `hsr 0 $y`,               `lss $x`                               |
+| lsi R[x] R[y] z          | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `lss $x`                      |
+| lsi R[x] R[x] y          | `hsd 0 y`,               `lss $x`                                |
+| lsi R[x]  y              | `hsd 0 y`,               `lss $x`                                |
+| rs R[x] R[y] R[z]        | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `rss $x`                     |
+| rs R[x] R[x] R[y]        | `hsr 0 $y`,               `rss $x`                               |
+| rs R[x]  R[y]            | `hsr 0 $y`,               `rss $x`                               |
+| rsi R[x] R[y] z          | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `rss $x`                      |
+| rsi R[x] R[x] y          | `hsd 0 y`,               `rss $x`                                |
+| rsi R[x]  y              | `hsd 0 y`,               `rss $x`                                |
+| super_jump DEST          | `SETl DEST`, `SETu DEST`, `jump`                                 |
+| super_bne R[x] R[y] DEST | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsr 1 $y`, `bne ` |
+| super_bl R[x] R[y] DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsr 1 $y`, `bl `  |
+| super_bg R[x] R[y] DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsr 1 $y`, `bg `  |
+| super_bne_i R[x] y DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bne `  |
+| super_bl_i R[x] y DEST   | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bl `   |
+| super_bg_i R[x] y DEST   | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bg `   |
+| super_load R[x] DEST     | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
+| super_save R[x] DEST     | `Setl DESR`,   `SETu DEST`,       `savei $x`                     |
 
 
 ## Program Implementations

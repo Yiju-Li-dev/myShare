@@ -572,97 +572,205 @@ void recoverMessage(unsigned int *originalMessage) {
 }
 ```
 ```asm
-      ; r[3] = i = 0
-      hsd 0 0
-      ldh 0 3
-      ;r[4] = data = 0
-      hsd 0 0
-      ldh 0 4
-      ;r[5] = errorFlag = 0
-      hsd 0 0
-      ldh 0 5
-      ; r[6] = errorPos = 0
-      hsd 0 0
-      ldh 0 6
-      ; r[7] = MAX_DATA-1 = 14
-      hsd 0 14
-      ldh 0 7
+        //r3 = i=0
+        hsd 0 0
+        ldh 0 3
 
-LOOP  
-      ; r[0] = r[3] = i
-      hsr 0 3
-      ; r[1] = r[7] = MAX_DATA-1
-      hsr 1 7
-      ; if r[0] > r[1], DONE
-      bg DONE
-      ; r[1] = 30
-      hsd 1 30
-      ; r[1] = r[1] + r[0] = 30+i
-      adds 1
-      ; r[0] = r[1] = 30+i
-      hsr 0 1
-      ; r[4] = data = mem[r[0]] = mem[30+i]
-      loadi 4
-      ; r[0] = 14
-      hsd 0 14
-      ; r[5] = errorFlag = r[4] = data
-      hsr 1 4
-      ldh 1 5
-      ; r[5] = errorFlag = r[5] >> r[0] = data >> 14
-      rss 5
-      ; r[6] = errorPos = r[4] = data
-      hsr 1 4
-      ldh 1 6
-      ; r[0] = 0x3FFF = 16383
-      hsd 0 16383
-      ; r[6] = errorPos = r[6] & r[0] = data & 0x3FFF
-      ands 6
-      ; r[0] = r[5] = errorFlag
-      hsr 0 5
-      ; r[1] = 0
-      hsd 1 0
-      ; if r[0] != r[1], go to SINGLE
-      bne SINGLE
-      ; r[0] = r[3] = i
-      hsr 0 3
-      ; mem[r[0]] mem[i] = r[6] = errorPos
-      savei 6
-      ; go to ITERATION
-      jumpf ITERATION
+        //r0=r3=i
+&LOOP&  hsr 0 3
+        //r1=14
+        hsd 1 14
+        //if i>14, done
+        bg DONE
+        //r5=31
+        hsd 0 15
+        hsdu 0 1
+        ldh 0 5
+        //r6=30
+        hsd 0 14
+        hsdu 0 1
+        ldh 0 6
+        //r5=msw
+        hsr 0 3
+        adds 5
+        hsr 0 5
+        loadi 5
+        //r6=lsw
+        hsr 0 3
+        adds 6
+        hsr 0 6
+        loadi 6
+        //r7=p8
+        hsr 0 5
+        ldh 0 7
+        hsd 0 1
+        ands 7
+        //r8=p4
+        hsr 0 6
+        ldh 0 8
+        hsd 0 4
+        rss 8
+        hsd 0 1
+        ands 8
+        //r9=p2
+        hsr 0 6
+        ldh 0 9
+        hsd 0 2
+        rss 9
+        hsd 0 1
+        ands 9
+        //r10=p1
+        hsr 0 6
+        ldh 0 10
+        hsd 0 1
+        rss 10
+        hsd 0 1
+        ands 10
+        //r11=p0
+        hsr 0 6
+        ldh 0 11
+        hsd 0 1
+        ands 11
+        //r12=b11_b9
+        hsr 0 5
+        ldh 0 12
+        hsd 0 5
+        rss 12
+        hsd 0 7
+        ands 12
+        //r13=b8_b5
+        hsr 0 5
+        ldh 0 13
+        hsd 0 1
+        rss 13
+        hsd 0 15
+        ands 13
+        //r14=b8_b1
+        hsr 0 13
+        ldh 0 14
+        hsd 0 4
+        lss 14
+        hsd 0 0
+        hsdu 0 14
+        hsr 1 6
+        ands 1
+        hsd 0 4
+        rss 1
+        ldh 1 15
+        hsr 0 14
+        ands 1
+        xors 15
+        hsr 0 1
+        xors 15
+        hsr 0 15
+        ldh 0 14
+        hsd 0 8
+        hsr 1 6
+        ands 1
+        hsd 0 3
+        rss 1
+        ldh 1 15
+        hsr 0 14
+        ands 1
+        xors 15
+        hsr 0 1
+        xors 15
+        hsr 0 15
+        ldh 0 14
 
-SINGLE
-      ; r[0] = r[5] = errorFlag
-      hsr 0 5
-      ; r[1] = 0x4000 = 16384
-      hsd 1 16384
-      ; if r[0] != r[1], go to DOUBLE
-      bne DOUBLE
-      ; r[1] = r[6] = errorPos
-      hsr 1 6
-      ; r[1] = r[1] ^ r[0] = errorPos ^ errorFlag
-      xors 1
-      ; r[0] = r[3] = i
-      hsr 0 3
-      ; mem[r[0]] = mem[i] = r[1] = errorPos ^ errorFlag
-      savei 1
-      ; go to ITERATION
-      jumpf ITERATION
+        //if r13 ^ r12 != r7 : F=1
+        hsr 0 13
+        hsr 1 12
+        xors 1
+        hsr 0 7
+        bne ONE
 
-DOUBLE
-      ; r[0] = r[3] = i
-      hsr 0 3
-      ; [TODO] mem[r[0]] = mem[i] = ERROR_STATE
-      savei $ERROR_STATE 
+        //if r12 ^ (r14 & 142) != r8 : F=2
+        hsd 0 14
+        hsdu 0 8
+        hsr 1 14
+        ands 1
+        hsr 0 12
+        xors 1
+        hsr 0 8
+        bne TWO
 
-ITERATION
-      ; r[0] = 1
-      hsd 0 1
-      ; r[3] = r[3] + r[0] = i+1
-      adds 3
-      ; go to LOOP
-      jumpf LOOP
+        //if (r12 & 6) ^ (r14 & 109) != r9 : F=2
+        hsd 0 6
+        hsr 1 12
+        ands 1
+        hsd 0 13
+        hsdu 0 6
+        ldh 0 15
+        hsr 0 14
+        ands 15
+        hsr 0 15
+        xors 1
+        hsr 0 9
+        bne TWO
 
-DONE
+        //if (r12 & 5) ^ (r14 & 91) != r10 : F=2
+        hsd 0 5
+        hsr 1 12
+        ands 1
+        hsd 0 11
+        hsdu 0 5
+        ldh 0 15
+        hsr 0 14
+        ands 15
+        hsr 0 15
+        xors 1
+        hsr 0 10
+        bne TWO
+
+        //if (r12 ^ r14 ^ r7 ^ r8 ^ r9 ^ r10) != r11 : F=2
+        hsr 0 12
+        hsr 1 14
+        xors 1
+        hsr 0 7
+        xors 1
+        hsr 0 8
+        xors 1
+        hsr 0 9
+        xors 1
+        hsr 10
+        xors 1
+        hsr 0 11
+        bne TWO
+        hsd 0 0
+        ldh 0 15
+        jump WRITE
+
+&ONE&   hsd 0 1
+        ldh 0 15
+        jump WRITE
+
+&TWO&   hsd 0 2
+        ldh 0 15
+
+&WRITE& hsd 0 1
+        hsr 1 3
+        lss 1
+        hsr 0 1
+        savei 14
+        hsd 0 1
+        adds 1
+        ldh 1 5
+        hsd 0 7
+        lss 15
+        hsr 1 15
+        hsr 0 12
+        ands 15
+        xors 1
+        hsr 0 15
+        xors 1
+        hsr 0 5
+        savei 1
+        hsd 0 1
+        adds 3
+        jump LOOP
+
+&DONE&
 ```
 
 ### Program 3

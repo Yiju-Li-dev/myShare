@@ -238,6 +238,7 @@ Because our special design of the ISA, some operations are more complex than the
 Note: 
 - You need to write `$x` or `x` to express the xth register;
 - You need to write `&LINENUMBER&` to correctly define the line number;
+
 #### ASM_real
 All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 
@@ -248,24 +249,34 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 | ------------------- | ---------------------------------------------------------------- |
 | add R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `adds $x`                    |
 | add R[x] R[x] R[y]  | `hsr 0 $y`,               `adds $x`                              |
+| add R[x] R[y]       | `hsr 0 $y`,               `adds $x`                              |
 | addi R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `adds $x`                     |
-| addi R[x] R[x] z    | `hsd 0 $z`,               `adds $x`                              |
+| addi R[x] R[x] y    | `hsd 0 y`,               `adds $x`                               |
+| addi R[x] y         | `hsd 0 y`,               `adds $x`                               |
 | xor R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `xors $x`                    |
 | xor R[x] R[x] R[y]  | `hsr 0 $y`,               `xors $x`                              |
+| xor R[x]  R[y]      | `hsr 0 $y`,               `xors $x`                              |
 | xori R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `xors $x`                     |
-| xori R[x] R[x] z    | `hsd 0 $z`,               `xors $x`                              |
+| xori R[x] R[x] y    | `hsd 0 y`,               `xors $x`                               |
+| xori R[x]  y        | `hsd 0 y`,               `xors $x`                               |
 | and R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `ands $x`                    |
 | and R[x] R[x] R[y]  | `hsr 0 $y`,               `ands $x`                              |
+| and R[x] R[y]       | `hsr 0 $y`,               `ands $x`                              |
 | andi R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ands $x`                     |
-| andi R[x] R[x] z    | `hsd 0 $z`,               `ands $x`                              |
+| andi R[x] R[x] y    | `hsd 0 y`,               `ands $x`                               |
+| andi R[x]  y        | `hsd 0 y`,               `ands $x`                               |
 | ls R[x] R[y] R[z]   | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `lss $x`                     |
 | ls R[x] R[x] R[y]   | `hsr 0 $y`,               `lss $x`                               |
+| ls R[x]  R[y]       | `hsr 0 $y`,               `lss $x`                               |
 | lsi R[x] R[y] z     | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `lss $x`                      |
-| lsi R[x] R[x] z     | `hsd 0 $z`,               `lss $x`                               |
+| lsi R[x] R[x] y     | `hsd 0 y`,               `lss $x`                                |
+| lsi R[x]  y         | `hsd 0 y`,               `lss $x`                                |
 | rs R[x] R[y] R[z]   | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `rss $x`                     |
 | rs R[x] R[x] R[y]   | `hsr 0 $y`,               `rss $x`                               |
+| rs R[x]  R[y]       | `hsr 0 $y`,               `rss $x`                               |
 | rsi R[x] R[y] z     | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `rss $x`                      |
-| rsi R[x] R[x] z     | `hsd 0 $z`,               `rss $x`                               |
+| rsi R[x] R[x] y     | `hsd 0 y`,               `rss $x`                                |
+| rsi R[x]  y         | `hsd 0 y`,               `rss $x`                                |
 | super_jump DEST     | `SETl DEST`, `SETu DEST`, `jump`                                 |
 | super_bne R[x] R[y] | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsr 1 $y`, `bne ` |
 | super_bl R[x] R[y]  | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsr 1 $y`, `bl `  |
@@ -276,7 +287,7 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 | load R[x] DEST      | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
 | save R[x] DEST      | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
 
-                     |                                                                  |
+
 ## Program Implementations
 ### Program 1
 ```python

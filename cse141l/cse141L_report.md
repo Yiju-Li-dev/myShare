@@ -19,6 +19,9 @@
     - [ASM notice](#asm-notice)
     - [ASM to MachineCode](#asm-to-machinecode)
     - [Special ASM to MachineCode](#special-asm-to-machinecode)
+    - [Supported ASMs](#supported-asms)
+      - [ASM\_real](#asm_real)
+      - [ASM\_super](#asm_super)
   - [Program Implementations](#program-implementations)
     - [Program 1](#program-1)
     - [Program 2](#program-2)
@@ -231,6 +234,49 @@ Because our special design of the ISA, some operations are more complex than the
 | bl       | bl with no select register            | bl        | bl 2             | if R[0] < R[1], PC = R[2] |
 | bg       | bg with no select register            | bg        | bg 2             | if R[0] > R[1], PC = R[2] |
 
+### Supported ASMs
+Note: 
+- You need to write `$x` or `x` to express the xth register;
+- You need to write `&LINENUMBER&` to correctly define the line number;
+#### ASM_real
+All above ASMs are supported by our assemblr, plus some ASM_super codes below;
+
+#### ASM_super
+**ASM_super can generate multiple ASM_real, where ASM_real is 1-1 of the machine code**
+
+| Format              | ASM_real CODE                                                    |
+| ------------------- | ---------------------------------------------------------------- |
+| add R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `adds $x`                    |
+| add R[x] R[x] R[y]  | `hsr 0 $y`,               `adds $x`                              |
+| addi R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `adds $x`                     |
+| addi R[x] R[x] z    | `hsd 0 $z`,               `adds $x`                              |
+| xor R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `xors $x`                    |
+| xor R[x] R[x] R[y]  | `hsr 0 $y`,               `xors $x`                              |
+| xori R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `xors $x`                     |
+| xori R[x] R[x] z    | `hsd 0 $z`,               `xors $x`                              |
+| and R[x] R[y] R[z]  | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `ands $x`                    |
+| and R[x] R[x] R[y]  | `hsr 0 $y`,               `ands $x`                              |
+| andi R[x] R[y] z    | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ands $x`                     |
+| andi R[x] R[x] z    | `hsd 0 $z`,               `ands $x`                              |
+| ls R[x] R[y] R[z]   | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `lss $x`                     |
+| ls R[x] R[x] R[y]   | `hsr 0 $y`,               `lss $x`                               |
+| lsi R[x] R[y] z     | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `lss $x`                      |
+| lsi R[x] R[x] z     | `hsd 0 $z`,               `lss $x`                               |
+| rs R[x] R[y] R[z]   | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `rss $x`                     |
+| rs R[x] R[x] R[y]   | `hsr 0 $y`,               `rss $x`                               |
+| rsi R[x] R[y] z     | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `rss $x`                      |
+| rsi R[x] R[x] z     | `hsd 0 $z`,               `rss $x`                               |
+| super_jump DEST     | `SETl DEST`, `SETu DEST`, `jump`                                 |
+| super_bne R[x] R[y] | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsr 1 $y`, `bne ` |
+| super_bl R[x] R[y]  | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsr 1 $y`, `bl `  |
+| super_bg R[x] R[y]  | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsr 1 $y`, `bg `  |
+| super_bne_i R[x] y  | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsd 1 y`, `bne `  |
+| super_bl_i R[x] y   | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsd 1 y`, `bl `   |
+| super_bg_i R[x] y   | `SETl DEST`, `SETu DEST`, `Setb`, `hsd 0 $x`, `hsd 1 y`, `bg `   |
+| load R[x] DEST      | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
+| save R[x] DEST      | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
+
+                     |                                                                  |
 ## Program Implementations
 ### Program 1
 ```python

@@ -5,15 +5,11 @@
   - [17:42 - 18:10]列计划
   - [18:10 - 19:00]CSE141 Lecture 整理(intro -> data hazards)
   - [19:00 - 20:20]CSE141 Lecture 整理(->Adv Pipe)
-  - [20:20 - 21:00]CSE141 HW6
-  - [21:00 - 21:40]CSE141 HW5
-  - [21:40 - 22:10]休息
-  - [22:10 - 22:20]
-  - [22:20 - 22:30]回教授邮件(Lab)
-  - [22:30 - 23:10]MATH158 HW3 联系教授
-  - [23:10 - 24:00]HUM2 Essay2 Prompt
+  - [20:20 - 22:25]CSE141 HW6
+  - [22:25 - 22:55]休息 吃饭
+  - [22:55 - 24:00]MATH158 HW3 联系教授
 - Mar. 3rd, Friday
-  - [00:00 - 01:00]HUM2 Essay2 Idea Generate(CA + TS)
+  - [00:00 - 01:00]HUM2 Essay2 Prompt + HUM2 Essay2 Idea Generate(CA + TS)
   - [01:00 - 01:30]HUM2 Essay2 Intro
   - [01:30 - 02:00]HUM2 Paragraph1 Structure + EMAIL instructor
   - [02:00 - 02:20]回家

@@ -550,227 +550,221 @@ DONE
 ```
 ### Program 2
 ```C
-unsigned short mem[60];
+for i in range(15):
+    MSW = mem[31 + i];
+    LSW = mem[30 + i];
+    p8 = MSW & 1;
+    p4 = (LSW >> 4) & 1;
+    p2 = (LSW >> 2) & 1;
+    p1 = (LSW >> 1) & 1;
+    p0 = LSW & 1;
 
-void recoverMessage(unsigned int *originalMessage) {
-  int i;
-  unsigned int data, errorFlag, errorPos;
+    b11_b9 = (MSW >> 5) & 7 ;
+    b8_b5 = (MSW >> 1) & 15;
+    b8_b1 = (b8_b5 << 4) | ((LSW & 224) >> 4) | ((LSW & 8) >> 3);
 
-  for (i = 0; i < MAX_DATA; i++) {
-    data = mem[30 + i];
-    errorFlag = data >> 14; //isolating the ywo significant bit 
-    errorPos = data & 0x3FFF;//set all bits of the result to 0 except the 14 bit
-
-    if (errorFlag == 0x0000) { // no errors
-      originalMessage[i] = errorPos;
-    } else if (errorFlag == 0x4000) { // single bit error(14 bits)
-      originalMessage[i] = errorPos ^ errorFlag;
-    } else { // double bit error
-      originalMessage[i] = ERROR_STATE;
+    if (b11_b9 ^ b8_b5 != p8) {
+        F = 1;
     }
-  }
-}
+    else {
+        if (^(b11_b9, b8_b1 & 142) != p4) {
+            F = 2;
+        }
+        if (^(b11_b9 & 6, b8_b1 & 109) != p2) {
+            F = 2;
+        }
+        if (^(b11_b9 & 5, b8_b1 & 91) != p1) {
+            F = 2;
+        }
+        if (^(b11_b9, b8_b1, p8, p4, p2, p1) != p0) {
+            F = 2;
+        }
+    }
+
+    mem[i * 2] = b8_b1;
+    mem[i * 2 + 1] = F << 7 | b11_b9;
 ```
 ```asm
-        //r3 = i=0
-        hsd 0 0
-        ldh 0 3
-
-        //r0=r3=i
-&LOOP&  hsr 0 3
-        //r1=14
-        hsd 1 14
-        //if i>14, done
-        bg DONE
-        //r5=31
-        hsd 0 15
-        hsdu 0 1
-        ldh 0 5
-        //r6=30
-        hsd 0 14
-        hsdu 0 1
-        ldh 0 6
-        //r5=msw
-        hsr 0 3
-        adds 5
-        hsr 0 5
-        loadi 5
-        //r6=lsw
-        hsr 0 3
-        adds 6
-        hsr 0 6
-        loadi 6
-        //r7=p8
-        hsr 0 5
-        ldh 0 7
-        hsd 0 1
-        ands 7
-        //r8=p4
-        hsr 0 6
-        ldh 0 8
-        hsd 0 4
-        rss 8
-        hsd 0 1
-        ands 8
-        //r9=p2
-        hsr 0 6
-        ldh 0 9
-        hsd 0 2
-        rss 9
-        hsd 0 1
-        ands 9
-        //r10=p1
-        hsr 0 6
-        ldh 0 10
-        hsd 0 1
-        rss 10
-        hsd 0 1
-        ands 10
-        //r11=p0
-        hsr 0 6
-        ldh 0 11
-        hsd 0 1
-        ands 11
-        //r12=b11_b9
-        hsr 0 5
-        ldh 0 12
-        hsd 0 5
-        rss 12
-        hsd 0 7
-        ands 12
-        //r13=b8_b5
-        hsr 0 5
-        ldh 0 13
-        hsd 0 1
-        rss 13
-        hsd 0 15
-        ands 13
-        //r14=b8_b1
-        hsr 0 13
-        ldh 0 14
-        hsd 0 4
-        lss 14
-        hsd 0 0
-        hsdu 0 14
-        hsr 1 6
-        ands 1
-        hsd 0 4
-        rss 1
-        ldh 1 15
-        hsr 0 14
-        ands 1
-        xors 15
-        hsr 0 1
-        xors 15
-        hsr 0 15
-        ldh 0 14
-        hsd 0 8
-        hsr 1 6
-        ands 1
-        hsd 0 3
-        rss 1
-        ldh 1 15
-        hsr 0 14
-        ands 1
-        xors 15
-        hsr 0 1
-        xors 15
-        hsr 0 15
-        ldh 0 14
-
-        //if r13 ^ r12 != r7 : F=1
-        hsr 0 13
-        hsr 1 12
-        xors 1
-        hsr 0 7
-        bne ONE
-
-        //if r12 ^ (r14 & 142) != r8 : F=2
-        hsd 0 14
-        hsdu 0 8
-        hsr 1 14
-        ands 1
-        hsr 0 12
-        xors 1
-        hsr 0 8
-        bne TWO
-
-        //if (r12 & 6) ^ (r14 & 109) != r9 : F=2
-        hsd 0 6
-        hsr 1 12
-        ands 1
-        hsd 0 13
-        hsdu 0 6
-        ldh 0 15
-        hsr 0 14
-        ands 15
-        hsr 0 15
-        xors 1
-        hsr 0 9
-        bne TWO
-
-        //if (r12 & 5) ^ (r14 & 91) != r10 : F=2
-        hsd 0 5
-        hsr 1 12
-        ands 1
-        hsd 0 11
-        hsdu 0 5
-        ldh 0 15
-        hsr 0 14
-        ands 15
-        hsr 0 15
-        xors 1
-        hsr 0 10
-        bne TWO
-
-        //if (r12 ^ r14 ^ r7 ^ r8 ^ r9 ^ r10) != r11 : F=2
-        hsr 0 12
-        hsr 1 14
-        xors 1
-        hsr 0 7
-        xors 1
-        hsr 0 8
-        xors 1
-        hsr 0 9
-        xors 1
-        hsr 10
-        xors 1
-        hsr 0 11
-        bne TWO
-        hsd 0 0
-        ldh 0 15
-        jump WRITE
-
-&ONE&   hsd 0 1
-        ldh 0 15
-        jump WRITE
-
-&TWO&   hsd 0 2
-        ldh 0 15
-
-&WRITE& hsd 0 1
-        hsr 1 3
-        lss 1
-        hsr 0 1
-        savei 14
-        hsd 0 1
-        adds 1
-        ldh 1 5
-        hsd 0 7
-        lss 15
-        hsr 1 15
-        hsr 0 12
-        ands 15
-        xors 1
-        hsr 0 15
-        xors 1
-        hsr 0 5
-        savei 1
-        hsd 0 1
-        adds 3
-        jump LOOP
-
-&DONE&
+hsd 0 0
+ldh 0 3
+hsd 0 5
+hsdu 0 11
+ldh 0 5
+hsr 0 3
+hsd 1 14
+bg 5
+hsd 0 15
+hsdu 0 1
+ldh 0 5
+hsd 0 14
+hsdu 0 1
+ldh 0 6
+hsr 0 3
+adds 5
+hsr 0 5
+loadi 5
+hsr 0 3
+adds 6
+hsr 0 6
+loadi 6
+hsr 0 5
+ldh 0 7
+hsd 0 1
+ands 7
+hsr 0 6
+ldh 0 8
+hsd 0 4
+rss 8
+hsd 0 1
+ands 8
+hsr 0 6
+ldh 0 9
+hsd 0 2
+rss 9
+hsd 0 1
+ands 9
+hsr 0 6
+ldh 0 10
+hsd 0 1
+rss 10
+hsd 0 1
+ands 10
+hsr 0 6
+ldh 0 11
+hsd 0 1
+ands 11
+hsr 0 5
+ldh 0 12
+hsd 0 5
+rss 12
+hsd 0 7
+ands 12
+hsr 0 5
+ldh 0 13
+hsd 0 1
+rss 13
+hsd 0 15
+ands 13
+hsr 0 13
+ldh 0 14
+hsd 0 4
+lss 14
+hsd 0 0
+hsdu 0 14
+hsr 1 6
+ands 1
+hsd 0 4
+rss 1
+ldh 1 15
+hsr 0 14
+ands 1
+xors 15
+hsr 0 1
+xors 15
+hsr 0 15
+ldh 0 14
+hsd 0 8
+hsr 1 6
+ands 1
+hsd 0 3
+rss 1
+ldh 1 15
+hsr 0 14
+ands 1
+xors 15
+hsr 0 1
+xors 15
+hsr 0 15
+ldh 0 14
+hsd 0 10
+hsdu 0 9
+ldh 0 5
+hsr 0 13
+hsr 1 12
+xors 1
+hsr 0 7
+bne 5
+hsd 0 13
+hsdu 0 9
+ldh 0 6
+hsd 0 14
+hsdu 0 8
+hsr 1 14
+ands 1
+hsr 0 12
+xors 1
+hsr 0 8
+bne 6
+hsd 0 6
+hsr 1 12
+ands 1
+hsd 0 13
+hsdu 0 6
+ldh 0 15
+hsr 0 14
+ands 15
+hsr 0 15
+xors 1
+hsr 0 9
+bne 6
+hsd 0 5
+hsr 1 12
+ands 1
+hsd 0 11
+hsdu 0 5
+ldh 0 15
+hsr 0 14
+ands 15
+hsr 0 15
+xors 1
+hsr 0 10
+bne 6
+hsr 0 12
+hsr 1 14
+xors 1
+hsr 0 7
+xors 1
+hsr 0 8
+xors 1
+hsr 0 9
+xors 1
+hsr 0 10
+xors 1
+hsr 0 11
+bne 6
+hsd 0 0
+ldh 0 15
+hsd 0 15 
+hsdu 0 9
+ldh 0 5
+jump 5
+hsd 0 1 
+ldh 0 15
+jump 5
+hsd 0 2 
+ldh 0 15
+hsd 0 1
+hsr 1 3
+lss 1
+hsr 0 1
+savei 14
+hsd 0 1
+adds 1
+ldh 1 5
+hsd 0 7
+lss 15
+hsr 1 15
+hsr 0 12
+ands 15
+xors 1
+hsr 0 15
+xors 1
+hsr 0 5
+savei 1
+hsd 0 1
+adds 3
+hsd 0 3
+jump 0
 ```
 
 ### Program 3

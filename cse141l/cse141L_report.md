@@ -73,13 +73,13 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
     - Format: opcode(2 bits)+func(2 bit)+Operand1(1 bit)+Operand2(4 bits)
   - M(Memory)
     - All instructions related to memory
-    - Format: opcode(2 bits)+func(2 bit)+operand1(4bits)+extra bit
+    - Format: opcode(2 bits)+func(3 bit)+operand1(4bits)
   - O(Operations)
     - Including Arithmetic/Logical/Shift instructions
     - Format: opcode(2 bits)+func(3 bit)+input(4 bits)
   - C(Counter)
     - Including all instructions related to modifing PC
-    - Format: opcode(2 bits)+func(2 bit)+input(5 bits)
+    - Format: opcode(2 bits)+func(3 bit)+input(4 bits)
 - Note our machine does not necessarily need to be seperated into these types. But for better scalability in the future, let's leave it as this.
   
   | Mnemonic | Meaning                                         | Type | opCode | func | Format     | Result                      |
@@ -97,10 +97,10 @@ I pledge to be fair to my classmates and instructors by completing all of my aca
   | xors     | Bitwise XOR and save                            | O    | 10     | 010  | xors R[x]  | R[x] = R[x] ^ R[0]          |
   | adds     | Add and save                                    | O    | 10     | 011  | adds R[x]  | R[x] = R[x] + R[0]          |
   | ands     | Bitwise AND and save                            | O    | 10     | 100  | ands R[x]  | R[x] = R[x] AND R[0]        |
-  | jumpf    | Alter PC to some given value with fake absolute | C    | 11     | 00   | jumpf x    | PC = R[x]                   |
-  | bne      | Branch if Not Equal                             | C    | 11     | 01   | bne x      | if R[0] != R[1], PC=R[x]    |
-  | bl       | Branch if less                                  | C    | 11     | 10   | bl x       | if R[0] < R[1], PC = R[x]   |
-  | bg       | Branch if greater                               | C    | 11     | 11   | bg  x      | if R[0] > R[1], PC = R[x]   |
+  | jumpf    | Alter PC to some given value with fake absolute | C    | 11     | 000  | jumpf x    | PC = R[x]                   |
+  | bne      | Branch if Not Equal                             | C    | 11     | 001  | bne x      | if R[0] != R[1], PC=R[x]    |
+  | bl       | Branch if less                                  | C    | 11     | 010  | bl x       | if R[0] < R[1], PC = R[x]   |
+  | bg       | Branch if greater                               | C    | 11     | 011  | bg  x      | if R[0] > R[1], PC = R[x]   |
   |          |                                                 |      |        |      |            |                             |
 - Operands
   

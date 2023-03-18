@@ -273,6 +273,12 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 | andi R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ands $x`                     |
 | andi R[x] R[x] y         | `hsd 0 y`,               `ands $x`                               |
 | andi R[x]  y             | `hsd 0 y`,               `ands $x`                               |
+| or R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `ands $x`                    |
+| or R[x] R[x] R[y]       | `hsr 0 $y`,               `ands $x`                              |
+| or R[x] R[y]            | `hsr 0 $y`,               `ands $x`                              |
+| ori R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ands $x`                     |
+| ori R[x] R[x] y         | `hsd 0 y`,               `ands $x`                               |
+| ori R[x]  y             | `hsd 0 y`,               `ands $x`                               |
 | ls R[x] R[y] R[z]        | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `lss $x`                     |
 | ls R[x] R[x] R[y]        | `hsr 0 $y`,               `lss $x`                               |
 | ls R[x]  R[y]            | `hsr 0 $y`,               `lss $x`                               |

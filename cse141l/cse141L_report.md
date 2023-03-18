@@ -217,10 +217,11 @@ Because our special design of the ISA, some operations are more complex than the
 | xors     | Bitwise XOR and save                      | O    | 10     | 010  | xors R[x]  | R[x] = R[x] ^ R[0]          |
 | adds     | Add and save                              | O    | 10     | 011  | adds R[x]  | R[x] = R[x] + R[0]          |
 | ands     | Bitwise AND and save                      | O    | 10     | 100  | ands R[x]  | R[x] = R[x] AND R[0]        |
-| jump     | Alter PC to value in selected register    | C    | 11     | 00   | jumpf x    | PC = R[x]                   |
-| bne      | Branch if Not Equal                       | C    | 11     | 01   | bne x      | if R[0] != R[1], PC=R[x]    |
-| bl       | Branch if less                            | C    | 11     | 10   | bl x       | if R[0] < R[1], PC = R[x]   |
-| bg       | Branch if greater                         | C    | 11     | 11   | bg  x      | if R[0] > R[1], PC = R[x]   |
+| ors     | Bitwise OR and save                      | O    | 10     | 101  | ors R[x]  | R[x] = R[x] OR R[0]        |
+| jump     | Alter PC to value in selected register    | C    | 11     | 000  | jumpf x    | PC = R[x]                   |
+| bne      | Branch if Not Equal                       | C    | 11     | 001  | bne x      | if R[0] != R[1], PC=R[x]    |
+| bl       | Branch if less                            | C    | 11     | 010  | bl x       | if R[0] < R[1], PC = R[x]   |
+| bg       | Branch if greater                         | C    | 11     | 011  | bg  x      | if R[0] > R[1], PC = R[x]   |
 
 ### Special ASM to MachineCode
 

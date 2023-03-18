@@ -214,10 +214,11 @@ Because our special design of the ISA, some operations are more complex than the
 | savei    | Save with in-complete address             | M    | 01     | 011  | savei R[x] | mem[R[h0]] = R[x]           |
 | lss      | Left shift and save                       | O    | 10     | 000  | lss R[x]   | R[x] = R[x] << R[0]         |
 | rss      | Right shift and save                      | O    | 10     | 001  | rss R[x]   | R[x] = R[x] >> R[0]         |
-| xors     | Bitwise XOR and save                      | O    | 10     | 010  | xors R[x]  | R[x] = R[x] ^ R[0]          |
+| pars     | Parity bit and save                      | O    | 10     | 010  | pars R[x]  | R[x] = {7'b00000000, ^{R[x], R[0]}}          |
 | adds     | Add and save                              | O    | 10     | 011  | adds R[x]  | R[x] = R[x] + R[0]          |
 | ands     | Bitwise AND and save                      | O    | 10     | 100  | ands R[x]  | R[x] = R[x] AND R[0]        |
 | ors     | Bitwise OR and save                      | O    | 10     | 101  | ors R[x]  | R[x] = R[x] OR R[0]        |
+| xors     | Bitwise XOR and save                      | O    | 10     | 110  | xors R[x]  | R[x] = R[x] ^ R[0]          |
 | jump     | Alter PC to value in selected register    | C    | 11     | 000  | jumpf x    | PC = R[x]                   |
 | bne      | Branch if Not Equal                       | C    | 11     | 001  | bne x      | if R[0] != R[1], PC=R[x]    |
 | bl       | Branch if less                            | C    | 11     | 010  | bl x       | if R[0] < R[1], PC = R[x]   |
@@ -254,6 +255,12 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 | addi R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `adds $x`                     |
 | addi R[x] R[x] y         | `hsd 0 y`,               `adds $x`                               |
 | addi R[x] y              | `hsd 0 y`,               `adds $x`                               |
+| par R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `xors $x`                    |
+| par R[x] R[x] R[y]       | `hsr 0 $y`,               `xors $x`                              |
+| par R[x]  R[y]           | `hsr 0 $y`,               `xors $x`                              |
+| pari R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `xors $x`                     |
+| pari R[x] R[x] y         | `hsd 0 y`,               `xors $x`                               |
+| pari R[x]  y             | `hsd 0 y`,               `xors $x`                               |
 | xor R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `xors $x`                    |
 | xor R[x] R[x] R[y]       | `hsr 0 $y`,               `xors $x`                              |
 | xor R[x]  R[y]           | `hsr 0 $y`,               `xors $x`                              |

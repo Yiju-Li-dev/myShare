@@ -301,7 +301,7 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 | super_bne_i R[x] y DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bne `  |
 | super_bl_i R[x] y DEST   | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bl `   |
 | super_bg_i R[x] y DEST   | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bg `   |
-| super_beq_i R[x] y DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bne `  |
+| super_beq_i R[x] y DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `beq `  |
 | super_load R[x] DEST     | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
 | super_save R[x] DEST     | `Setl DESR`,   `SETu DEST`,       `savei $x`                     |
 

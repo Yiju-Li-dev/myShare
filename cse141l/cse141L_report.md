@@ -223,6 +223,7 @@ Because our special design of the ISA, some operations are more complex than the
 | bne      | Branch if Not Equal                       | C    | 11     | 001  | bne x      | if R[0] != R[1], PC=R[x]    |
 | bl       | Branch if less                            | C    | 11     | 010  | bl x       | if R[0] < R[1], PC = R[x]   |
 | bg       | Branch if greater                         | C    | 11     | 011  | bg  x      | if R[0] > R[1], PC = R[x]   |
+ | beq      | Branch if Equal                                 | C    | 11     | 100  | bne x      | if R[0] == R[1], PC=R[x]    |
 
 ### Special ASM to MachineCode
 
@@ -235,6 +236,7 @@ Because our special design of the ISA, some operations are more complex than the
 | bne      | bne with no select register           | bne       | bne 2            | if R[0] != R[1], PC=R[2]  |
 | bl       | bl with no select register            | bl        | bl 2             | if R[0] < R[1], PC = R[2] |
 | bg       | bg with no select register            | bg        | bg 2             | if R[0] > R[1], PC = R[2] |
+| beq      | bg with no select register            | bg        | bg 2             | if R[0] == R[1], PC = R[2] |
 
 ### Supported ASMs
 Note: 
@@ -295,9 +297,11 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 | super_bne R[x] R[y] DEST | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsr 1 $y`, `bne ` |
 | super_bl R[x] R[y] DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsr 1 $y`, `bl `  |
 | super_bg R[x] R[y] DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsr 1 $y`, `bg `  |
+| super_beq R[x] R[y] DEST | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsr 1 $y`, `bne ` |
 | super_bne_i R[x] y DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bne `  |
 | super_bl_i R[x] y DEST   | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bl `   |
 | super_bg_i R[x] y DEST   | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bg `   |
+| super_beq_i R[x] y DEST  | `SETl DEST`, `SETu DEST`, `Setb`, `hsr 0 $x`, `hsd 1 y`, `bne `  |
 | super_load R[x] DEST     | `Setl DESR`,   `SETu DEST`,       `loadi $x`                     |
 | super_save R[x] DEST     | `Setl DESR`,   `SETu DEST`,       `savei $x`                     |
 

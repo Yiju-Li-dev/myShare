@@ -223,7 +223,7 @@ Because our special design of the ISA, some operations are more complex than the
 | bne      | Branch if Not Equal                       | C    | 11     | 001  | bne x      | if R[0] != R[1], PC=R[x]    |
 | bl       | Branch if less                            | C    | 11     | 010  | bl x       | if R[0] < R[1], PC = R[x]   |
 | bg       | Branch if greater                         | C    | 11     | 011  | bg  x      | if R[0] > R[1], PC = R[x]   |
- | beq      | Branch if Equal                                 | C    | 11     | 100  | bne x      | if R[0] == R[1], PC=R[x]    |
+ | beq      | Branch if Equal                                 | C    | 11     | 100  | beq x      | if R[0] == R[1], PC=R[x]    |
 
 ### Special ASM to MachineCode
 
@@ -236,7 +236,7 @@ Because our special design of the ISA, some operations are more complex than the
 | bne      | bne with no select register           | bne       | bne 2            | if R[0] != R[1], PC=R[2]  |
 | bl       | bl with no select register            | bl        | bl 2             | if R[0] < R[1], PC = R[2] |
 | bg       | bg with no select register            | bg        | bg 2             | if R[0] > R[1], PC = R[2] |
-| beq      | bg with no select register            | bg        | bg 2             | if R[0] == R[1], PC = R[2] |
+| beq      | bg with no select register            | beq       | beq 2            | if R[0] == R[1], PC = R[2] |
 
 ### Supported ASMs
 Note: 
@@ -257,12 +257,12 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 | addi R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `adds $x`                     |
 | addi R[x] R[x] y         | `hsd 0 y`,               `adds $x`                               |
 | addi R[x] y              | `hsd 0 y`,               `adds $x`                               |
-| par R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `xors $x`                    |
-| par R[x] R[x] R[y]       | `hsr 0 $y`,               `xors $x`                              |
-| par R[x]  R[y]           | `hsr 0 $y`,               `xors $x`                              |
-| pari R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `xors $x`                     |
-| pari R[x] R[x] y         | `hsd 0 y`,               `xors $x`                               |
-| pari R[x]  y             | `hsd 0 y`,               `xors $x`                               |
+| par R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `pars $x`                    |
+| par R[x] R[x] R[y]       | `hsr 0 $y`,               `pars $x`                              |
+| par R[x]  R[y]           | `hsr 0 $y`,               `pars $x`                              |
+| pari R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `pars $x`                     |
+| pari R[x] R[x] y         | `hsd 0 y`,               `pars $x`                               |
+| pari R[x]  y             | `hsd 0 y`,               `pars $x`                               |
 | xor R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `xors $x`                    |
 | xor R[x] R[x] R[y]       | `hsr 0 $y`,               `xors $x`                              |
 | xor R[x]  R[y]           | `hsr 0 $y`,               `xors $x`                              |
@@ -275,12 +275,12 @@ All above ASMs are supported by our assemblr, plus some ASM_super codes below;
 | andi R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ands $x`                     |
 | andi R[x] R[x] y         | `hsd 0 y`,               `ands $x`                               |
 | andi R[x]  y             | `hsd 0 y`,               `ands $x`                               |
-| or R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `ands $x`                    |
-| or R[x] R[x] R[y]       | `hsr 0 $y`,               `ands $x`                              |
-| or R[x] R[y]            | `hsr 0 $y`,               `ands $x`                              |
-| ori R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ands $x`                     |
-| ori R[x] R[x] y         | `hsd 0 y`,               `ands $x`                               |
-| ori R[x]  y             | `hsd 0 y`,               `ands $x`                               |
+| or R[x] R[y] R[z]       | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `ors $x`                    |
+| or R[x] R[x] R[y]       | `hsr 0 $y`,               `ors $x`                              |
+| or R[x] R[y]            | `hsr 0 $y`,               `ors $x`                              |
+| ori R[x] R[y] z         | `hsr 0 $y`, `ldh 0 $x`, `hsd 0 z`, `ors $x`                     |
+| ori R[x] R[x] y         | `hsd 0 y`,               `ors $x`                               |
+| ori R[x]  y             | `hsd 0 y`,               `ors $x`                               |
 | ls R[x] R[y] R[z]        | `hsr 0 $y`, `ldh 0 $x`, `hsr 0 $z`, `lss $x`                     |
 | ls R[x] R[x] R[y]        | `hsr 0 $y`,               `lss $x`                               |
 | ls R[x]  R[y]            | `hsr 0 $y`,               `lss $x`                               |
